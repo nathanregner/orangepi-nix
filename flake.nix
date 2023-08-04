@@ -2,18 +2,26 @@
   description = "Orange Pi Linux Kernels";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
 
-    orange-pi-5-10-rk3588 = {
-      url = "github:orangepi-xunlong/linux-orangepi?ref=orange-pi-5.10-rk3588";
+    armbian-build = {
+      url = "github:armbian/build";
+      flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils }: {
-    # TODO: aarch64 support
-    packages = flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-      in rec { default = self.packages.x86_64-linux.hello; });
-  };
+  outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
+    # cross-compile on more powerful host system
+    flake-utils.lib.eachDefaultSystem (hostSystem:
+      let
+        hostPkgs = nixpkgs.legacyPackages.${hostSystem};
+        targetPkgs = hostPkgs.pkgsCross.aarch64-multiplatform;
+        inherit (targetPkgs) callPackage linuxPackagesFor;
+      in {
+        packages = {
+          pkgsCross.aarch64-multiplatform.linuxKernel.packages.linux-rockchip-rk3588-edge =
+            linuxPackagesFor
+            (callPackage ./linux/rockchip-rk3588-edge { inherit inputs; });
+        };
+      });
 }
