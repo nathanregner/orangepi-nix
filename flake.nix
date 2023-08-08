@@ -19,9 +19,11 @@
         targetPkgs = hostPkgs.pkgsCross.aarch64-multiplatform;
         inherit (targetPkgs) callPackage;
       in {
-        packages = {
+        packages = rec {
           linux-orange-pi-6-5-rk3588 =
             callPackage ./linux/orange-pi-6.5-rk3588 { inherit inputs; };
+          linuxPackages-orange-pi-6-5-rk3588 =
+            targetPkgs.linuxPackagesFor linux-orange-pi-6-5-rk3588;
         };
 
         devShells.default =
