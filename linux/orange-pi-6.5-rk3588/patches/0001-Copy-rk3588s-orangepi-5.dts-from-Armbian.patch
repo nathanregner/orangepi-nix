@@ -1,13 +1,23 @@
-From 5de7cdf79c166482d3b305f28aa577fdc2a7653a Mon Sep 17 00:00:00 2001
+From 7b1566bded7f8656e73e739e33fbd46023fd8c1f Mon Sep 17 00:00:00 2001
 From: Nathan Regner <nathanregner@gmail.com>
 Date: Mon, 7 Aug 2023 16:15:37 -0600
 Subject: [PATCH] Copy rk3588s-orangepi-5.dts from Armbian
 
 ---
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
  .../boot/dts/rockchip/rk3588s-orangepi-5.dts  | 1128 +++++++++++++++++
- 1 file changed, 1128 insertions(+)
+ 2 files changed, 1129 insertions(+)
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
 
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index b7fb908eb92d..f1d48c8d9c10 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -102,3 +102,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-indiedroid-nova.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-khadas-edge2.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
 diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts b/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
 new file mode 100644
 index 000000000000..ba0e438381ff
@@ -1143,5 +1153,5 @@ index 000000000000..ba0e438381ff
 +	status = "okay";
 +};
 -- 
-2.41.0
+2.40.1
 
