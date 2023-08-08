@@ -1,4 +1,4 @@
-{ inputs, lib, pkgsBuildBuild, linuxManualConfig }@args:
+{ inputs, lib, pkgsBuildBuild, linuxManualConfig, ... }@args:
 let inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang;
 in with lib;
 (linuxManualConfig rec {
@@ -32,7 +32,7 @@ in with lib;
       (lib.filterAttrs isPatchFile (builtins.readDir patchesPath))));
 
     extraStructuredConfig = with lib.kernel; { };
-  }];
+  }] ++ args.kernelPatches or [ ];
 } // (args.argsOverride or { })).overrideAttrs (final: prev: {
 
   nativeBuildInputs = prev.nativeBuildInputs ++ [ bintools-unwrapped clang ];

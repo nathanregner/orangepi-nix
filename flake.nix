@@ -17,13 +17,11 @@
       let
         hostPkgs = nixpkgs.legacyPackages.${hostSystem};
         targetPkgs = hostPkgs.pkgsCross.aarch64-multiplatform;
-        inherit (targetPkgs) callPackage;
+        inherit (targetPkgs) callPackage linuxPackagesFor;
       in {
         packages = rec {
-          linux-orange-pi-6-5-rk3588 =
-            callPackage ./linux/orange-pi-6.5-rk3588 { inherit inputs; };
-          linuxPackages-orange-pi-6-5-rk3588 =
-            targetPkgs.linuxPackagesFor linux-orange-pi-6-5-rk3588;
+          linux-orange-pi-6-5-rk3588 = linuxPackagesFor
+            (callPackage ./linux/orange-pi-6.5-rk3588 { inherit inputs; });
         };
 
         devShells.default =
