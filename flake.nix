@@ -5,7 +5,8 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     linux-orange-pi-6-5-rk3588 = {
-      url = "git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git";
+      url =
+        "git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git?ref=rk3588";
       flake = false;
     };
   };
@@ -22,5 +23,8 @@
           linux-orange-pi-6-5-rk3588 =
             callPackage ./linux/orange-pi-6.5-rk3588 { inherit inputs; };
         };
+
+        devShells.default =
+          hostPkgs.mkShell { packages = [ hostPkgs.bashInteractive ]; };
       });
 }

@@ -21,52 +21,18 @@
     "linux-orange-pi-6-5-rk3588": {
       "flake": false,
       "locked": {
-        "lastModified": 1691446537,
-        "narHash": "sha256-FoW399OWoIvoYJ1vTPiBJ5YlBDSSh31MyG5BfoIzPMc=",
-        "owner": "nathanregner",
-        "repo": "linux-orangepi",
-        "rev": "5de7cdf79c166482d3b305f28aa577fdc2a7653a",
-        "type": "github"
+        "lastModified": 1691067980,
+        "narHash": "sha256-9ZOHRWV8q3Gg+GyBQIYAoglW6ScKb9ROxK3RgfNXzrE=",
+        "ref": "rk3588",
+        "rev": "9789e706b415eaf1d0a2d12c6510bec4c15ed05e",
+        "revCount": 1199857,
+        "type": "git",
+        "url": "git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git"
       },
       "original": {
-        "owner": "nathanregner",
-        "ref": "orange-pi-6-5-rk3588",
-        "repo": "linux-orangepi",
-        "type": "github"
-      }
-    },
-    "linux-orangepi-5-10-rk3588": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1688469188,
-        "narHash": "sha256-PbnC5DGniA26LUU6sWLjMPY6RS+MxSfGPIZp1QFoEng=",
-        "owner": "orangepi-xunlong",
-        "repo": "linux-orangepi",
-        "rev": "eb1c681e5184e51d8ce1f351559d149d17f48b57",
-        "type": "github"
-      },
-      "original": {
-        "owner": "orangepi-xunlong",
-        "ref": "orange-pi-5.10-rk3588",
-        "repo": "linux-orangepi",
-        "type": "github"
-      }
-    },
-    "linux-orangepi-6-1-sun50iw9": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1688614391,
-        "narHash": "sha256-TM/2NETYTSiWXbiTMRSiGlA3RbGnnvuG8RwgXCIOXn8=",
-        "owner": "orangepi-xunlong",
-        "repo": "linux-orangepi",
-        "rev": "5ad66f8f01a41a54bcdee90053a7e0f444bca17c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "orangepi-xunlong",
-        "ref": "orange-pi-6.1-sun50iw9",
-        "repo": "linux-orangepi",
-        "type": "github"
+        "ref": "rk3588",
+        "type": "git",
+        "url": "git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git"
       }
     },
     "nixpkgs": {
@@ -87,10 +53,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "linux-orange-pi-6-5-rk3588": "linux-orange-pi-6-5-rk3588",
-        "linux-orangepi-5-10-rk3588": "linux-orangepi-5-10-rk3588",
-        "linux-orangepi-6-1-sun50iw9": "linux-orangepi-6-1-sun50iw9",
-        "nixpkgs": "nixpkgs",
-        "u-boot-orangepi-2017-09-rk3588": "u-boot-orangepi-2017-09-rk3588"
+        "nixpkgs": "nixpkgs"
       }
     },
     "systems": {
@@ -105,23 +68,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
-        "type": "github"
-      }
-    },
-    "u-boot-orangepi-2017-09-rk3588": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1688465411,
-        "narHash": "sha256-L4cnmyzjFu4WRE0JTzQh2kNxD5CKxbYj5NgFT2EUynI=",
-        "owner": "orangepi-xunlong",
-        "repo": "u-boot-orangepi",
-        "rev": "1f70ac3a968d121d86350092a7eff0dbd56114b7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "orangepi-xunlong",
-        "ref": "v2017.09-rk3588",
-        "repo": "u-boot-orangepi",
         "type": "github"
       }
     }
