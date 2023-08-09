@@ -6,7 +6,7 @@
 
     linux-orange-pi-6-5-rk3588 = {
       url =
-        "git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git?ref=rk3588";
+        "git+ssh://git@github.com/nathanregner/linux-orangepi?ref=collabora-rk3588";
       flake = false;
     };
   };
