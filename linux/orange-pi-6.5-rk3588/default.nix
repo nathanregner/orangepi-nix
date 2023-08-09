@@ -20,19 +20,6 @@ in with lib;
     "KCFLAGS=-I${clang}/resource-root/include"
     "CROSS_COMPILE=aarch64-linux-gnu-"
   ];
-
-  kernelPatches = [{
-    name = "nix-patches";
-    patch = let
-      patchesPath = ./patches;
-      isPatchFile = name: value:
-        value == "regular" && (lib.hasSuffix ".patch" name);
-      patchFilePath = name: patchesPath + "/${name}";
-    in map patchFilePath (lib.naturalSort (lib.attrNames
-      (lib.filterAttrs isPatchFile (builtins.readDir patchesPath))));
-
-    extraStructuredConfig = with lib.kernel; { };
-  }] ++ args.kernelPatches or [ ];
 } // (args.argsOverride or { })).overrideAttrs (final: prev: {
 
   nativeBuildInputs = prev.nativeBuildInputs ++ [ bintools-unwrapped clang ];
