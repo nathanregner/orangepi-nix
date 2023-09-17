@@ -4,6 +4,12 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
 
+    linux-orange-pi-6-1-sun50iw9 = {
+      # url = "github:orangepi-xunlong/linux-orangepi/orange-pi-6.1-sun50iw9";
+      url = "github:nathanregner/linux-orangepi/orange-pi-6.1-sun50iw9";
+      flake = false;
+    };
+
     linux-orange-pi-6-5-rk3588 = {
       url =
         "git+ssh://git@github.com/nathanregner/linux-orangepi?ref=collabora-rk3588";
@@ -20,6 +26,8 @@
         inherit (targetPkgs) callPackage linuxPackagesFor;
       in {
         packages = rec {
+          linux-orange-pi-6-1-sun50iw9 = linuxPackagesFor
+            (callPackage ./linux/orange-pi-6.1-sun50iw9 { inherit inputs; });
           linux-orange-pi-6-5-rk3588 = linuxPackagesFor
             (callPackage ./linux/orange-pi-6.5-rk3588 { inherit inputs; });
         };
