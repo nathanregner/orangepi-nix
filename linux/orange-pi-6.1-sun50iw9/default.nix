@@ -12,7 +12,7 @@ in with lib;
   src = inputs.linux-orange-pi-6-1-sun50iw9;
 
   allowImportFromDerivation = true;
-  configfile = ./linux-6.1-sun50iw9-next.config;
+  configfile = ./.config;
 
   # build with Clang for easier cross-compilation
   extraMakeFlags = [
