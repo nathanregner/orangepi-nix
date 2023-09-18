@@ -4,12 +4,18 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
 
+    # Orange Pi Zero 2
     linux-orange-pi-6-1-sun50iw9 = {
       # url = "github:orangepi-xunlong/linux-orangepi/orange-pi-6.1-sun50iw9";
       url = "github:nathanregner/linux-orangepi/orange-pi-6.1-sun50iw9";
       flake = false;
     };
 
+    # Orange Pi 5
+    linux-orange-pi-5-10-armbian = {
+      url = "github:armbian/linux-rockchip/rk-5.10-rkr4";
+      flake = false;
+    };
     linux-orange-pi-6-5-rk3588 = {
       url =
         "git+ssh://git@github.com/nathanregner/linux-orangepi?ref=collabora-rk3588";
