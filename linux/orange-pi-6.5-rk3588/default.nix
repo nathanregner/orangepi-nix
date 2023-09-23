@@ -1,5 +1,5 @@
 { inputs, lib, pkgsBuildBuild, linuxManualConfig, ... }@args:
-let inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang;
+let inherit (pkgsBuildBuild.llvmPackages_16) bintools-unwrapped clang;
 in with lib;
 (linuxManualConfig rec {
   version = "6.5.0-rc1";

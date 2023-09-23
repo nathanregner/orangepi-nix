@@ -16,6 +16,7 @@
       url = "github:armbian/linux-rockchip/rk-5.10-rkr4";
       flake = false;
     };
+    # FIXME?
     linux-orange-pi-6-5-rk3588 = {
       url =
         "git+ssh://git@github.com/nathanregner/linux-orangepi?ref=collabora-rk3588";
