@@ -4,6 +4,11 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
 
+    armbian-build = {
+      url = "github:armbian/build";
+      flake = false;
+    };
+
     # Orange Pi Zero 2
     linux-orange-pi-6-1-sun50iw9 = {
       # url = "github:orangepi-xunlong/linux-orangepi/orange-pi-6.1-sun50iw9";
@@ -37,6 +42,9 @@
             (callPackage ./linux/orange-pi-6.1-sun50iw9 { inherit inputs; });
           linux-orange-pi-6-5-rk3588 = linuxPackagesFor
             (callPackage ./linux/orange-pi-6.5-rk3588 { inherit inputs; });
+
+          linux-rockchip-rk3588-edge = linuxPackagesFor
+            (callPackage ./linux/rockchip-rk3588-edge { inherit inputs; });
         };
 
         devShells.default =

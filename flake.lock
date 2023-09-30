@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "armbian-build": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1694590251,
+        "narHash": "sha256-PHvJoduMQ7QNAXKv8WeM/TkAjdMhmVeDphmlzkU4qPw=",
+        "owner": "armbian",
+        "repo": "build",
+        "rev": "103d8403078c149334a8454adda1641f1151f4c5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "armbian",
+        "repo": "build",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -71,11 +87,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1695227375,
-        "narHash": "sha256-76WTkeCu3npPZDkay2hB2Dj3cOuCiF0P41dbmXWUKtA=",
+        "lastModified": 1695978539,
+        "narHash": "sha256-lta5HToBZMWZ2hl5CautNSUgIZViR41QxN7JKbMAjgQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fe977679240ac2027b151ecca1bc6ce808c2e8af",
+        "rev": "bd9b686c0168041aea600222be0805a0de6e6ab8",
         "type": "github"
       },
       "original": {
@@ -85,6 +101,7 @@
     },
     "root": {
       "inputs": {
+        "armbian-build": "armbian-build",
         "flake-utils": "flake-utils",
         "linux-orange-pi-5-10-armbian": "linux-orange-pi-5-10-armbian",
         "linux-orange-pi-6-1-sun50iw9": "linux-orange-pi-6-1-sun50iw9",
