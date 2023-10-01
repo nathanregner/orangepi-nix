@@ -1,12 +1,10 @@
-{ inputs, lib, pkgsBuildBuild, linuxManualConfig, linuxPackages_latest, ...
-}@args:
+{ inputs, lib, pkgsBuildBuild, linuxManualConfig, linuxPackages_latest
+, writeTextFile, ... }@args:
 let
   inherit (pkgsBuildBuild.llvmPackages_16) bintools-unwrapped clang;
   inherit (linuxPackages_latest) kernel;
   # https://github.com/armbian/build/blob/103d8403078c149334a8454adda1641f1151f4c5/config/sources/families/rockchip-rk3588.conf#L32
   patchesPath = "${inputs.armbian-build}/patch/kernel/rockchip-rk3588-edge/";
-  configPath =
-    "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
 in with lib;
 (linuxManualConfig rec {
   # TODO: pin to version that Armbian build is expecting...
@@ -17,7 +15,18 @@ in with lib;
   };
 
   allowImportFromDerivation = true;
-  configfile = configPath;
+
+  # https://github.com/NixOS/nixpkgs/blob/0396d3b0fb7f62ddc79a506ad3e6124f01d2ed0a/nixos/modules/system/boot/systemd.nix#L575
+  configfile = writeTextFile {
+    name = ".config";
+    text = let
+      base = builtins.readFile
+        "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
+    in ''
+      ${base}
+      CONFIG_AUTOFS4_FS=m
+    '';
+  };
 
   kernelPatches = [{
     name = "armbian-patches";
