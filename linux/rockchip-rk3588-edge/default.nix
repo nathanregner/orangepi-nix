@@ -21,12 +21,14 @@ in with lib;
 
   allowImportFromDerivation = true;
 
-  # https://github.com/NixOS/nixpkgs/blob/0396d3b0fb7f62ddc79a506ad3e6124f01d2ed0a/nixos/modules/system/boot/systemd.nix#L575
+  # make LSMOD=/tmp/mylsmod LMC_KEEP="drivers/usb:drivers/gpu:fs" localmodconfig
   configfile = writeTextFile {
     name = ".config";
     text = let
-      base = builtins.readFile
-        "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
+      # base = builtins.readFile "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
+      base = builtins.readFile ./.config;
+      # enable modules required by systemd: 
+      # https://github.com/NixOS/nixpkgs/blob/0396d3b0fb7f62ddc79a506ad3e6124f01d2ed0a/nixos/modules/system/boot/systemd.nix#L575
     in ''
       ${base}
       CONFIG_AUTOFS4_FS=m
