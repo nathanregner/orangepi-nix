@@ -8,6 +8,12 @@
       url = "github:armbian/build";
       flake = false;
     };
+
+    rockchip-3588 = {
+      url =
+        "https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux.git";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
