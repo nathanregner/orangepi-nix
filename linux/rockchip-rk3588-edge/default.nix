@@ -1,19 +1,26 @@
 { inputs, lib, pkgsBuildBuild, linuxManualConfig, linuxPackages_latest
 , pkgsHostTarget, pkgsBuildTarget, buildPackages # FIXME: pkgsBuildTarget
-, writeTextFile, ... }@args:
+, writeTextFile, fetchurl, ... }@args:
 let
-  inherit (pkgsBuildBuild) clangStdenv ccacheStdenv;
-  inherit (pkgsBuildBuild.llvmPackages_16) bintools-unwrapped clang;
   inherit (linuxPackages_latest) kernel;
 
-  stdenv = ccacheStdenv.override { stdenv = clangStdenv; };
+  inherit (pkgsBuildBuild.llvmPackages_16) stdenv bintools-unwrapped clang;
+
+  # stdenv = ccacheStdenv.override { stdenv = clangStdenv; };
 
   # https://github.com/armbian/build/blob/103d8403078c149334a8454adda1641f1151f4c5/config/sources/families/rockchip-rk3588.conf#L32
   patchesPath = "${inputs.armbian-build}/patch/kernel/rockchip-rk3588-edge/";
 in with lib;
 ((linuxManualConfig rec {
   # TODO: pin to version that Armbian build is expecting...
-  inherit (kernel) version modDirVersion src;
+  # inherit (kernel) version modDirVersion src;
+
+  version = "6.6-rc5";
+  src = fetchurl {
+    url = "https://git.kernel.org/torvalds/t/linux-6.6-rc5.tar.gz";
+    hash = "sha256-drpGgR7oFWfOfbd42S1eXM6QW42EfYUINlJloDWP/Kw=";
+  };
+
   extraMeta = {
     branch = versions.majorMinor version;
     platforms = [ "aarch64-linux" ];
@@ -53,13 +60,6 @@ in with lib;
   # });
 }).overrideAttrs (final: prev: {
 
-  preConfigure = ''
-    ${prev.preConfigure or ""}
-    makeFlagsArray+=(
-      KCFLAGS="-I${clang}/resource-root/include -Wno-unused-command-line-argument"
-    )
-  '';
-
   # re-implement armbian DTS patching
   # https://github.com/armbian/build/blob/103d8403078c149334a8454adda1641f1151f4c5/patch/kernel/rockchip-rk3588-edge/0000.patching_config.yaml
   postPatch = let dtsPath = "arch/arm64/boot/dts/rockchip/";
@@ -79,21 +79,26 @@ in with lib;
     }" >> ${dtsPath}/Makefile;
   '';
 
-  depsBuildBuild = let
-    inherit (pkgsBuildBuild.llvmPackages_16) stdenv bintools-unwrapped clang;
-  in [
-    (buildPackages.ccacheStdenv.override { inherit stdenv; }).cc
+  depsBuildBuild = [
+    # (buildPackages.ccacheStdenv.override { inherit stdenv; }).cc
+    stdenv.cc
     bintools-unwrapped
     clang
   ];
 
-  nativeBuildInputs = let
-    inherit (pkgsBuildBuild.llvmPackages_16) stdenv bintools-unwrapped clang;
-  in [
-    (pkgsBuildBuild.ccacheStdenv.override { inherit stdenv; }).cc
+  nativeBuildInputs = [
+    # (pkgsBuildBuild.ccacheStdenv.override { inherit stdenv; }).cc
+    stdenv.cc
     bintools-unwrapped
     clang
   ] ++ prev.nativeBuildInputs;
+
+  preConfigure = ''
+    ${prev.preConfigure or ""}
+    makeFlagsArray+=(
+      KCFLAGS="-I${clang}/resource-root/include -Wno-unused-command-line-argument"
+    )
+  '';
 
   # remove CC=stdenv.cc flag
   makeFlags = filter (flag: !(strings.hasPrefix "CC=" flag)) prev.makeFlags;
