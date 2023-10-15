@@ -30,8 +30,8 @@ in with lib;
 
   # make LSMOD=/tmp/mylsmod LMC_KEEP="drivers/usb:drivers/gpu:fs" localmodconfig
   configfile = let
-    # base = builtins.readFile "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
-    base = builtins.readFile ./.config;
+    base =  "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
+    # base =  ./.config;
     options = [
       # enable modules required by systemd.nix
       # https://github.com/NixOS/nixpkgs/blob/0396d3b0fb7f62ddc79a506ad3e6124f01d2ed0a/nixos/modules/system/boot/systemd.nix#L575
@@ -55,7 +55,7 @@ in with lib;
       "SECCOMP"
     ];
   in runCommand ".config" { } ''
-    substitute ${./.config} $out ${
+    substitute ${base} $out ${
       lib.strings.concatMapStrings
       (option: " --replace 'CONFIG_${option}=' '#'") options
     }
