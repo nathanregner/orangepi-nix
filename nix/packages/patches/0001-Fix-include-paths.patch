@@ -1,0 +1,2339 @@
+From 4bb363fac08fa43503df51a53a2db724c57c4343 Mon Sep 17 00:00:00 2001
+From: Nathan Regner <nathanregner@gmail.com>
+Date: Wed, 2 Aug 2023 22:20:16 -0600
+Subject: [PATCH 1/2] Fix include paths
+
+---
+ Documentation/kbuild/modules.rst              |  4 +-
+ arch/arm/mach-s3c/Makefile                    |  4 +-
+ arch/arm64/kernel/Makefile                    |  2 +-
+ arch/ia64/kernel/Makefile                     |  2 +-
+ arch/mips/mti-malta/Makefile                  |  2 +-
+ arch/powerpc/platforms/cell/spufs/Makefile    |  2 +-
+ arch/x86/kernel/cpu/resctrl/Makefile          |  2 +-
+ drivers/android/Makefile                      |  2 +-
+ drivers/base/Makefile                         |  2 +-
+ drivers/base/regmap/Makefile                  |  2 +-
+ drivers/block/Makefile                        |  2 +-
+ drivers/block/null_blk/Makefile               |  2 +-
+ drivers/block/rnbd/Makefile                   |  2 +-
+ drivers/cpufreq/Makefile                      |  2 +-
+ drivers/gpu/drm/i915/Makefile                 |  2 +-
+ drivers/gpu/drm/nouveau/Kbuild                |  8 +--
+ drivers/gpu/drm/nouveau/nvkm/Kbuild           | 10 ++--
+ drivers/gpu/drm/nouveau/nvkm/engine/Kbuild    | 42 ++++++++--------
+ drivers/gpu/drm/nouveau/nvkm/subdev/Kbuild    | 50 +++++++++----------
+ drivers/gpu/drm/v3d/Makefile                  |  2 +-
+ drivers/greybus/Makefile                      |  2 +-
+ drivers/hv/Makefile                           |  4 +-
+ drivers/iio/imu/bno055/Makefile               |  2 +-
+ drivers/infiniband/core/Makefile              |  2 +-
+ drivers/infiniband/hw/hfi1/Makefile           |  2 +-
+ drivers/infiniband/hw/irdma/Makefile          |  2 +-
+ drivers/infiniband/sw/rdmavt/Makefile         |  2 +-
+ drivers/infiniband/ulp/rtrs/Makefile          |  4 +-
+ drivers/interconnect/Makefile                 |  2 +-
+ drivers/misc/cxl/Makefile                     |  2 +-
+ drivers/misc/habanalabs/Makefile              |  8 +--
+ drivers/misc/habanalabs/common/Makefile       |  4 +-
+ drivers/misc/mei/Makefile                     |  2 +-
+ drivers/misc/ocxl/Makefile                    |  2 +-
+ drivers/mtd/devices/Makefile                  |  2 +-
+ drivers/net/dsa/mv88e6xxx/Makefile            |  2 +-
+ drivers/net/ethernet/freescale/dpaa/Makefile  |  2 +-
+ drivers/net/ethernet/freescale/dpaa2/Makefile |  2 +-
+ drivers/net/ethernet/intel/i40e/Makefile      |  4 +-
+ drivers/net/ethernet/intel/iavf/Makefile      |  4 +-
+ .../ethernet/marvell/octeontx2/af/Makefile    |  2 +-
+ .../net/ethernet/mellanox/mlx5/core/Makefile  |  2 +-
+ .../ethernet/mellanox/mlx5/core/esw/Makefile  |  2 +-
+ .../mellanox/mlx5/core/steering/Makefile      |  2 +-
+ drivers/net/wireless/ath/Makefile             |  2 +-
+ drivers/net/wireless/ath/ath10k/Makefile      |  2 +-
+ drivers/net/wireless/ath/ath11k/Makefile      |  2 +-
+ drivers/net/wireless/ath/ath5k/Makefile       |  2 +-
+ drivers/net/wireless/ath/ath6kl/Makefile      |  2 +-
+ drivers/net/wireless/ath/wil6210/Makefile     |  2 +-
+ drivers/net/wireless/intel/iwlwifi/Makefile   |  4 +-
+ .../net/wireless/intel/iwlwifi/mei/Makefile   |  2 +-
+ drivers/net/wireless/mediatek/mt76/Makefile   |  6 +--
+ .../wireless/mediatek/mt76/mt7615/Makefile    |  2 +-
+ .../wireless/mediatek/mt76/mt7921/Makefile    |  2 +-
+ .../net/wireless/mediatek/mt7601u/Makefile    |  2 +-
+ drivers/net/wireless/rtl8189es/Makefile       | 16 +++---
+ .../net/wireless/rtl8189es/hal/phydm/phydm.mk |  2 +-
+ .../rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl8189fs/Makefile       | 14 +++---
+ .../net/wireless/rtl8189fs/hal/phydm/phydm.mk |  2 +-
+ .../rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl8192eu/Makefile       | 12 ++---
+ .../net/wireless/rtl8192eu/hal/phydm/phydm.mk |  2 +-
+ .../rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl8723ds/Makefile       |  8 +--
+ drivers/net/wireless/rtl8723du/Makefile       |  6 +--
+ .../net/wireless/rtl8723du/hal/phydm/phydm.mk |  2 +-
+ drivers/net/wireless/rtl8811cu/Makefile       | 20 ++++----
+ .../net/wireless/rtl8811cu/hal/phydm/phydm.mk |  2 +-
+ .../rtl8811cu/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl8811cu/rtl8821c.mk    |  2 +-
+ drivers/net/wireless/rtl8812au/Makefile       | 12 ++---
+ .../net/wireless/rtl8812au/hal/phydm/phydm.mk |  2 +-
+ .../rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl88x2bu/Makefile       | 20 ++++----
+ .../net/wireless/rtl88x2bu/hal/phydm/phydm.mk |  2 +-
+ .../rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl88x2bu/rtl8822b.mk    |  2 +-
+ drivers/net/wireless/rtl88x2cs/Makefile       | 18 +++----
+ .../net/wireless/rtl88x2cs/hal/phydm/phydm.mk |  2 +-
+ .../rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk |  2 +-
+ drivers/net/wireless/rtl88x2cs/rtl8822c.mk    |  2 +-
+ drivers/net/wireless/silabs/wfx/Makefile      |  2 +-
+ drivers/net/wireless/uwe5622/Makefile         |  2 +-
+ .../net/wireless/uwe5622/unisocwcn/Makefile   |  8 +--
+ drivers/nvme/common/Makefile                  |  2 +-
+ drivers/nvme/host/Makefile                    |  2 +-
+ drivers/nvme/target/Makefile                  |  2 +-
+ drivers/platform/chrome/Makefile              |  4 +-
+ drivers/platform/surface/aggregator/Makefile  |  2 +-
+ drivers/s390/cio/Makefile                     |  4 +-
+ drivers/scsi/pm8001/Makefile                  |  2 +-
+ drivers/soc/qcom/Makefile                     |  2 +-
+ drivers/staging/greybus/Makefile              |  2 +-
+ drivers/tee/optee/Makefile                    |  2 +-
+ drivers/usb/cdns3/Makefile                    |  4 +-
+ drivers/usb/chipidea/Makefile                 |  2 +-
+ drivers/usb/dwc3/Makefile                     |  2 +-
+ drivers/usb/gadget/udc/Makefile               |  2 +-
+ drivers/usb/host/Makefile                     |  2 +-
+ drivers/usb/mtu3/Makefile                     |  2 +-
+ drivers/usb/musb/Makefile                     |  2 +-
+ drivers/usb/typec/tipd/Makefile               |  2 +-
+ drivers/usb/typec/ucsi/Makefile               |  2 +-
+ fs/cifs/Makefile                              |  2 +-
+ fs/gfs2/Makefile                              |  2 +-
+ fs/nfs/Makefile                               |  4 +-
+ fs/nfsd/Makefile                              |  2 +-
+ fs/ocfs2/Makefile                             |  2 +-
+ fs/zonefs/Makefile                            |  2 +-
+ kernel/trace/Makefile                         |  6 +--
+ net/batman-adv/Makefile                       |  2 +-
+ net/dccp/Makefile                             |  2 +-
+ net/ieee802154/Makefile                       |  2 +-
+ net/l2tp/Makefile                             |  2 +-
+ net/mac80211/Makefile                         |  2 +-
+ net/mac802154/Makefile                        |  2 +-
+ net/openvswitch/Makefile                      |  2 +-
+ net/smc/Makefile                              |  2 +-
+ net/tipc/Makefile                             |  2 +-
+ net/tls/Makefile                              |  2 +-
+ net/wireless/Makefile                         |  2 +-
+ samples/bpf/Makefile                          |  6 +--
+ samples/ftrace/Makefile                       |  2 +-
+ samples/trace_events/Makefile                 |  4 +-
+ samples/trace_events/trace-events-sample.h    |  2 +-
+ samples/trace_events/trace_custom_sched.h     |  2 +-
+ scripts/Makefile.asm-generic                  |  2 +-
+ scripts/Makefile.dtbinst                      |  2 +-
+ scripts/Makefile.headersinst                  |  2 +-
+ sound/core/Makefile                           |  4 +-
+ sound/firewire/Makefile                       |  2 +-
+ sound/firewire/motu/Makefile                  |  2 +-
+ sound/hda/Makefile                            |  2 +-
+ sound/pci/hda/Makefile                        |  4 +-
+ sound/soc/intel/avs/Makefile                  |  2 +-
+ sound/soc/intel/catpt/Makefile                |  2 +-
+ .../selftests/bpf/bpf_testmod/Makefile        |  2 +-
+ 139 files changed, 271 insertions(+), 271 deletions(-)
+
+diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
+index a1f3eb7a43e2..b6a38f19465f 100644
+--- a/Documentation/kbuild/modules.rst
++++ b/Documentation/kbuild/modules.rst
+@@ -391,8 +391,8 @@ according to the following rule:
+ 		complex-y := src/complex_main.o
+ 		complex-y += src/hal/hardwareif.o
+ 
+-		ccflags-y := -I$(src)/include
+-		ccflags-y += -I$(src)/src/hal/include
++		ccflags-y := -I$(srctree)/$(src)/include
++		ccflags-y += -I$(srctree)/$(src)/src/hal/include
+ 
+ 	As you can see, kbuild knows how to handle object files located
+ 	in other directories. The trick is to specify the directory
+diff --git a/arch/arm/mach-s3c/Makefile b/arch/arm/mach-s3c/Makefile
+index 7c7d3318fd61..deb44326b828 100644
+--- a/arch/arm/mach-s3c/Makefile
++++ b/arch/arm/mach-s3c/Makefile
+@@ -3,11 +3,11 @@
+ # Copyright 2009 Simtec Electronics
+ 
+ ifdef CONFIG_ARCH_S3C24XX
+-include $(src)/Makefile.s3c24xx
++include $(srctree)/$(src)/Makefile.s3c24xx
+ endif
+ 
+ ifdef CONFIG_ARCH_S3C64XX
+-include $(src)/Makefile.s3c64xx
++include $(srctree)/$(src)/Makefile.s3c64xx
+ endif
+ 
+ # Objects we always build independent of SoC choice
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 2f361a883d8c..5c1224a6c79d 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-CFLAGS_armv8_deprecated.o := -I$(src)
++CFLAGS_armv8_deprecated.o := -I$(srctree)/$(src)
+ 
+ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_insn.o = $(CC_FLAGS_FTRACE)
+diff --git a/arch/ia64/kernel/Makefile b/arch/ia64/kernel/Makefile
+index ae9ff07de4ab..d7e1cabee2ec 100644
+--- a/arch/ia64/kernel/Makefile
++++ b/arch/ia64/kernel/Makefile
+@@ -43,4 +43,4 @@ obj-$(CONFIG_ELF_CORE)		+= elfcore.o
+ CFLAGS_traps.o  += -mfixed-range=f2-f5,f16-f31
+ 
+ # The gate DSO image is built using a special linker script.
+-include $(src)/Makefile.gate
++include $(srctree)/$(src)/Makefile.gate
+diff --git a/arch/mips/mti-malta/Makefile b/arch/mips/mti-malta/Makefile
+index 13bbd12bfa65..ff1f19f632d6 100644
+--- a/arch/mips/mti-malta/Makefile
++++ b/arch/mips/mti-malta/Makefile
+@@ -16,4 +16,4 @@ obj-y				+= malta-time.o
+ 
+ obj-$(CONFIG_MIPS_CMP)		+= malta-amon.o
+ 
+-CFLAGS_malta-dtshim.o = -I$(src)/../../../scripts/dtc/libfdt
++CFLAGS_malta-dtshim.o = -I$(srctree)/$(src)/../../../scripts/dtc/libfdt
+diff --git a/arch/powerpc/platforms/cell/spufs/Makefile b/arch/powerpc/platforms/cell/spufs/Makefile
+index 52e4c80ec8d0..74785e93f8ae 100644
+--- a/arch/powerpc/platforms/cell/spufs/Makefile
++++ b/arch/powerpc/platforms/cell/spufs/Makefile
+@@ -7,7 +7,7 @@ spufs-y += switch.o fault.o lscsa_alloc.o
+ spufs-$(CONFIG_COREDUMP) += coredump.o
+ 
+ # magic for the trace events
+-CFLAGS_sched.o := -I$(src)
++CFLAGS_sched.o := -I$(srctree)/$(src)
+ 
+ # Rules to build switch.o with the help of SPU tool chain
+ SPU_CROSS	:= spu-
+diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
+index 4a06c37b9cf1..53e8139d1d7c 100644
+--- a/arch/x86/kernel/cpu/resctrl/Makefile
++++ b/arch/x86/kernel/cpu/resctrl/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_X86_CPU_RESCTRL)	+= core.o rdtgroup.o monitor.o
+ obj-$(CONFIG_X86_CPU_RESCTRL)	+= ctrlmondata.o pseudo_lock.o
+-CFLAGS_pseudo_lock.o = -I$(src)
++CFLAGS_pseudo_lock.o = -I$(srctree)/$(src)
+diff --git a/drivers/android/Makefile b/drivers/android/Makefile
+index c9d3d0c99c25..848e17d6146d 100644
+--- a/drivers/android/Makefile
++++ b/drivers/android/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ccflags-y += -I$(src)			# needed for trace events
++ccflags-y += -I$(srctree)/$(src)			# needed for trace events
+ 
+ obj-$(CONFIG_ANDROID_BINDERFS)		+= binderfs.o
+ obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o binder_alloc.o
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index 83217d243c25..b354ecffeab8 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -32,5 +32,5 @@ obj-y			+= test/
+ ccflags-$(CONFIG_DEBUG_DRIVER) := -DDEBUG
+ 
+ # define_trace.h needs to know how to find our header
+-CFLAGS_trace.o		:= -I$(src)
++CFLAGS_trace.o		:= -I$(srctree)/$(src)
+ obj-$(CONFIG_TRACING)	+= trace.o
+diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
+index 11facb32a027..dfe0c4449956 100644
+--- a/drivers/base/regmap/Makefile
++++ b/drivers/base/regmap/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # For include/trace/define_trace.h to include trace.h
+-CFLAGS_regmap.o := -I$(src)
++CFLAGS_regmap.o := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_REGMAP) += regmap.o regcache.o
+ obj-$(CONFIG_REGMAP) += regcache-rbtree.o regcache-flat.o
+diff --git a/drivers/block/Makefile b/drivers/block/Makefile
+index 101612cba303..289597ffa700 100644
+--- a/drivers/block/Makefile
++++ b/drivers/block/Makefile
+@@ -7,7 +7,7 @@
+ # 
+ 
+ # needed for trace events
+-ccflags-y				+= -I$(src)
++ccflags-y				+= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_MAC_FLOPPY)	+= swim3.o
+ obj-$(CONFIG_BLK_DEV_SWIM)	+= swim_mod.o
+diff --git a/drivers/block/null_blk/Makefile b/drivers/block/null_blk/Makefile
+index 84c36e512ab8..47b1f3860234 100644
+--- a/drivers/block/null_blk/Makefile
++++ b/drivers/block/null_blk/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # needed for trace events
+-ccflags-y			+= -I$(src)
++ccflags-y			+= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk.o
+ null_blk-objs			:= main.o
+diff --git a/drivers/block/rnbd/Makefile b/drivers/block/rnbd/Makefile
+index 40b31630822c..cda0d2cb1947 100644
+--- a/drivers/block/rnbd/Makefile
++++ b/drivers/block/rnbd/Makefile
+@@ -6,7 +6,7 @@ rnbd-client-y := rnbd-clt.o \
+ 		  rnbd-clt-sysfs.o \
+ 		  rnbd-common.o
+ 
+-CFLAGS_rnbd-srv-trace.o = -I$(src)
++CFLAGS_rnbd-srv-trace.o = -I$(srctree)/$(src)
+ 
+ rnbd-server-y := rnbd-common.o \
+ 		  rnbd-srv.o \
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index 49b98c62c5af..1c89b4fe86e9 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -18,7 +18,7 @@ obj-$(CONFIG_CPUFREQ_DT)		+= cpufreq-dt.o
+ obj-$(CONFIG_CPUFREQ_DT_PLATDEV)	+= cpufreq-dt-platdev.o
+ 
+ # Traces
+-CFLAGS_amd-pstate-trace.o               := -I$(src)
++CFLAGS_amd-pstate-trace.o               := -I$(srctree)/$(src)
+ amd_pstate-y				:= amd-pstate.o amd-pstate-trace.o
+ 
+ ##################################################################################
+diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+index cea00aaca04b..ea93b7a47add 100644
+--- a/drivers/gpu/drm/i915/Makefile
++++ b/drivers/gpu/drm/i915/Makefile
+@@ -342,7 +342,7 @@ i915-y += i915_vgpu.o
+ i915-$(CONFIG_DRM_I915_GVT) += \
+ 	intel_gvt.o \
+ 	intel_gvt_mmio_table.o
+-include $(src)/gvt/Makefile
++include $(srctree)/$(src)/gvt/Makefile
+ 
+ obj-$(CONFIG_DRM_I915) += i915.o
+ obj-$(CONFIG_DRM_I915_GVT_KVMGT) += kvmgt.o
+diff --git a/drivers/gpu/drm/nouveau/Kbuild b/drivers/gpu/drm/nouveau/Kbuild
+index 60586fb8275e..10affd8dfad3 100644
+--- a/drivers/gpu/drm/nouveau/Kbuild
++++ b/drivers/gpu/drm/nouveau/Kbuild
+@@ -8,12 +8,12 @@ ccflags-y += -I $(NOUVEAU_PATH)/$(src)
+ 
+ # NVKM - HW resource manager
+ #- code also used by various userspace tools/tests
+-include $(src)/nvif/Kbuild
++include $(srctree)/$(src)/nvif/Kbuild
+ nouveau-y := $(nvif-y)
+ 
+ # NVIF - NVKM interface library (NVKM user interface also defined here)
+ #- code also used by various userspace tools/tests
+-include $(src)/nvkm/Kbuild
++include $(srctree)/$(src)/nvkm/Kbuild
+ nouveau-y += $(nvkm-y)
+ 
+ # DRM - general
+@@ -58,8 +58,8 @@ nouveau-y += nouveau_fbcon.o
+ nouveau-y += nv04_fbcon.o
+ nouveau-y += nv50_fbcon.o
+ nouveau-y += nvc0_fbcon.o
+-include $(src)/dispnv04/Kbuild
+-include $(src)/dispnv50/Kbuild
++include $(srctree)/$(src)/dispnv04/Kbuild
++include $(srctree)/$(src)/dispnv50/Kbuild
+ 
+ # DRM - command submission
+ nouveau-y += nouveau_abi16.o
+diff --git a/drivers/gpu/drm/nouveau/nvkm/Kbuild b/drivers/gpu/drm/nouveau/nvkm/Kbuild
+index db3ade125fa9..1acdc7426364 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/Kbuild
++++ b/drivers/gpu/drm/nouveau/nvkm/Kbuild
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: MIT
+-include $(src)/nvkm/core/Kbuild
+-include $(src)/nvkm/nvfw/Kbuild
+-include $(src)/nvkm/falcon/Kbuild
+-include $(src)/nvkm/subdev/Kbuild
+-include $(src)/nvkm/engine/Kbuild
++include $(srctree)/$(src)/nvkm/core/Kbuild
++include $(srctree)/$(src)/nvkm/nvfw/Kbuild
++include $(srctree)/$(src)/nvkm/falcon/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/Kbuild
++include $(srctree)/$(src)/nvkm/engine/Kbuild
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/Kbuild b/drivers/gpu/drm/nouveau/nvkm/engine/Kbuild
+index c6dfed18f35b..9b5390a2f38a 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/Kbuild
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/Kbuild
+@@ -2,24 +2,24 @@
+ nvkm-y += nvkm/engine/falcon.o
+ nvkm-y += nvkm/engine/xtensa.o
+ 
+-include $(src)/nvkm/engine/bsp/Kbuild
+-include $(src)/nvkm/engine/ce/Kbuild
+-include $(src)/nvkm/engine/cipher/Kbuild
+-include $(src)/nvkm/engine/device/Kbuild
+-include $(src)/nvkm/engine/disp/Kbuild
+-include $(src)/nvkm/engine/dma/Kbuild
+-include $(src)/nvkm/engine/fifo/Kbuild
+-include $(src)/nvkm/engine/gr/Kbuild
+-include $(src)/nvkm/engine/mpeg/Kbuild
+-include $(src)/nvkm/engine/msenc/Kbuild
+-include $(src)/nvkm/engine/mspdec/Kbuild
+-include $(src)/nvkm/engine/msppp/Kbuild
+-include $(src)/nvkm/engine/msvld/Kbuild
+-include $(src)/nvkm/engine/nvenc/Kbuild
+-include $(src)/nvkm/engine/nvdec/Kbuild
+-include $(src)/nvkm/engine/pm/Kbuild
+-include $(src)/nvkm/engine/sec/Kbuild
+-include $(src)/nvkm/engine/sec2/Kbuild
+-include $(src)/nvkm/engine/sw/Kbuild
+-include $(src)/nvkm/engine/vic/Kbuild
+-include $(src)/nvkm/engine/vp/Kbuild
++include $(srctree)/$(src)/nvkm/engine/bsp/Kbuild
++include $(srctree)/$(src)/nvkm/engine/ce/Kbuild
++include $(srctree)/$(src)/nvkm/engine/cipher/Kbuild
++include $(srctree)/$(src)/nvkm/engine/device/Kbuild
++include $(srctree)/$(src)/nvkm/engine/disp/Kbuild
++include $(srctree)/$(src)/nvkm/engine/dma/Kbuild
++include $(srctree)/$(src)/nvkm/engine/fifo/Kbuild
++include $(srctree)/$(src)/nvkm/engine/gr/Kbuild
++include $(srctree)/$(src)/nvkm/engine/mpeg/Kbuild
++include $(srctree)/$(src)/nvkm/engine/msenc/Kbuild
++include $(srctree)/$(src)/nvkm/engine/mspdec/Kbuild
++include $(srctree)/$(src)/nvkm/engine/msppp/Kbuild
++include $(srctree)/$(src)/nvkm/engine/msvld/Kbuild
++include $(srctree)/$(src)/nvkm/engine/nvenc/Kbuild
++include $(srctree)/$(src)/nvkm/engine/nvdec/Kbuild
++include $(srctree)/$(src)/nvkm/engine/pm/Kbuild
++include $(srctree)/$(src)/nvkm/engine/sec/Kbuild
++include $(srctree)/$(src)/nvkm/engine/sec2/Kbuild
++include $(srctree)/$(src)/nvkm/engine/sw/Kbuild
++include $(srctree)/$(src)/nvkm/engine/vic/Kbuild
++include $(srctree)/$(src)/nvkm/engine/vp/Kbuild
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/Kbuild b/drivers/gpu/drm/nouveau/nvkm/subdev/Kbuild
+index 2cb24fff7e32..436f80416dbf 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/Kbuild
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/Kbuild
+@@ -1,26 +1,26 @@
+ # SPDX-License-Identifier: MIT
+-include $(src)/nvkm/subdev/acr/Kbuild
+-include $(src)/nvkm/subdev/bar/Kbuild
+-include $(src)/nvkm/subdev/bios/Kbuild
+-include $(src)/nvkm/subdev/bus/Kbuild
+-include $(src)/nvkm/subdev/clk/Kbuild
+-include $(src)/nvkm/subdev/devinit/Kbuild
+-include $(src)/nvkm/subdev/fault/Kbuild
+-include $(src)/nvkm/subdev/fb/Kbuild
+-include $(src)/nvkm/subdev/fuse/Kbuild
+-include $(src)/nvkm/subdev/gpio/Kbuild
+-include $(src)/nvkm/subdev/gsp/Kbuild
+-include $(src)/nvkm/subdev/i2c/Kbuild
+-include $(src)/nvkm/subdev/iccsense/Kbuild
+-include $(src)/nvkm/subdev/instmem/Kbuild
+-include $(src)/nvkm/subdev/ltc/Kbuild
+-include $(src)/nvkm/subdev/mc/Kbuild
+-include $(src)/nvkm/subdev/mmu/Kbuild
+-include $(src)/nvkm/subdev/mxm/Kbuild
+-include $(src)/nvkm/subdev/pci/Kbuild
+-include $(src)/nvkm/subdev/pmu/Kbuild
+-include $(src)/nvkm/subdev/privring/Kbuild
+-include $(src)/nvkm/subdev/therm/Kbuild
+-include $(src)/nvkm/subdev/timer/Kbuild
+-include $(src)/nvkm/subdev/top/Kbuild
+-include $(src)/nvkm/subdev/volt/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/acr/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/bar/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/bios/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/bus/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/clk/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/devinit/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/fault/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/fb/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/fuse/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/gpio/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/gsp/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/i2c/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/iccsense/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/instmem/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/ltc/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/mc/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/mmu/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/mxm/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/pci/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/pmu/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/privring/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/therm/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/timer/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/top/Kbuild
++include $(srctree)/$(src)/nvkm/subdev/volt/Kbuild
+diff --git a/drivers/gpu/drm/v3d/Makefile b/drivers/gpu/drm/v3d/Makefile
+index e8b314137020..71758447bf1a 100644
+--- a/drivers/gpu/drm/v3d/Makefile
++++ b/drivers/gpu/drm/v3d/Makefile
+@@ -17,4 +17,4 @@ v3d-$(CONFIG_DEBUG_FS) += v3d_debugfs.o
+ 
+ obj-$(CONFIG_DRM_V3D)  += v3d.o
+ 
+-CFLAGS_v3d_trace_points.o := -I$(src)
++CFLAGS_v3d_trace_points.o := -I$(srctree)/$(src)
+diff --git a/drivers/greybus/Makefile b/drivers/greybus/Makefile
+index 9bccdd229aa2..39e038b76a6c 100644
+--- a/drivers/greybus/Makefile
++++ b/drivers/greybus/Makefile
+@@ -16,7 +16,7 @@ greybus-y :=	core.o		\
+ obj-$(CONFIG_GREYBUS)		+= greybus.o
+ 
+ # needed for trace events
+-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
+ 
+ # Greybus Host controller drivers
+ gb-es2-y := es2.o
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index d76df5c8c2a9..f5cbaecbf0e0 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -3,8 +3,8 @@ obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
+ obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
+ obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
+ 
+-CFLAGS_hv_trace.o = -I$(src)
+-CFLAGS_hv_balloon.o = -I$(src)
++CFLAGS_hv_trace.o = -I$(srctree)/$(src)
++CFLAGS_hv_balloon.o = -I$(srctree)/$(src)
+ 
+ hv_vmbus-y := vmbus_drv.o \
+ 		 hv.o connection.o channel.o \
+diff --git a/drivers/iio/imu/bno055/Makefile b/drivers/iio/imu/bno055/Makefile
+index 98c624730dae..b0945c198c97 100644
+--- a/drivers/iio/imu/bno055/Makefile
++++ b/drivers/iio/imu/bno055/Makefile
+@@ -4,7 +4,7 @@ obj-$(CONFIG_BOSCH_BNO055) += bno055.o
+ obj-$(CONFIG_BOSCH_BNO055_SERIAL) += bno055_ser.o
+ bno055_ser-y := bno055_ser_core.o
+ # define_trace.h needs to know how to find our header
+-CFLAGS_bno055_ser_trace.o := -I$(src)
++CFLAGS_bno055_ser_trace.o := -I$(srctree)/$(src)
+ bno055_ser-$(CONFIG_TRACING) += bno055_ser_trace.o
+ 
+ obj-$(CONFIG_BOSCH_BNO055_I2C) += bno055_i2c.o
+diff --git a/drivers/infiniband/core/Makefile b/drivers/infiniband/core/Makefile
+index 8ab4eea5a0a5..330f6487830d 100644
+--- a/drivers/infiniband/core/Makefile
++++ b/drivers/infiniband/core/Makefile
+@@ -21,7 +21,7 @@ ib_cm-y :=			cm.o cm_trace.o
+ 
+ iw_cm-y :=			iwcm.o iwpm_util.o iwpm_msg.o
+ 
+-CFLAGS_cma_trace.o +=		-I$(src)
++CFLAGS_cma_trace.o +=		-I$(srctree)/$(src)
+ rdma_cm-y :=			cma.o cma_trace.o
+ 
+ rdma_cm-$(CONFIG_INFINIBAND_ADDR_TRANS_CONFIGFS) += cma_configfs.o
+diff --git a/drivers/infiniband/hw/hfi1/Makefile b/drivers/infiniband/hw/hfi1/Makefile
+index 2e89ec10efed..e01f965c1afd 100644
+--- a/drivers/infiniband/hw/hfi1/Makefile
++++ b/drivers/infiniband/hw/hfi1/Makefile
+@@ -61,7 +61,7 @@ endif
+ endif
+ endif
+ 
+-CFLAGS_trace.o = -I$(src)
++CFLAGS_trace.o = -I$(srctree)/$(src)
+ ifdef MVERSION
+ CFLAGS_driver.o = -DHFI_DRIVER_VERSION_BASE=\"$(MVERSION)\"
+ endif
+diff --git a/drivers/infiniband/hw/irdma/Makefile b/drivers/infiniband/hw/irdma/Makefile
+index 48c3854235a0..86825811af5a 100644
+--- a/drivers/infiniband/hw/irdma/Makefile
++++ b/drivers/infiniband/hw/irdma/Makefile
+@@ -24,4 +24,4 @@ irdma-objs := cm.o        \
+               verbs.o     \
+               ws.o        \
+ 
+-CFLAGS_trace.o = -I$(src)
++CFLAGS_trace.o = -I$(srctree)/$(src)
+diff --git a/drivers/infiniband/sw/rdmavt/Makefile b/drivers/infiniband/sw/rdmavt/Makefile
+index b21962dafcc9..2d03d8beac9f 100644
+--- a/drivers/infiniband/sw/rdmavt/Makefile
++++ b/drivers/infiniband/sw/rdmavt/Makefile
+@@ -11,4 +11,4 @@ obj-$(CONFIG_INFINIBAND_RDMAVT) += rdmavt.o
+ rdmavt-y := vt.o ah.o cq.o mad.o mcast.o mmap.o mr.o pd.o qp.o \
+ 	rc.o srq.o trace.o
+ 
+-CFLAGS_trace.o = -I$(src)
++CFLAGS_trace.o = -I$(srctree)/$(src)
+diff --git a/drivers/infiniband/ulp/rtrs/Makefile b/drivers/infiniband/ulp/rtrs/Makefile
+index 5227e7788e1f..e23d791feb09 100644
+--- a/drivers/infiniband/ulp/rtrs/Makefile
++++ b/drivers/infiniband/ulp/rtrs/Makefile
+@@ -1,13 +1,13 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-CFLAGS_rtrs-clt-trace.o = -I$(src)
++CFLAGS_rtrs-clt-trace.o = -I$(srctree)/$(src)
+ 
+ rtrs-client-y := rtrs-clt.o \
+ 		  rtrs-clt-stats.o \
+ 		  rtrs-clt-sysfs.o \
+ 		  rtrs-clt-trace.o
+ 
+-CFLAGS_rtrs-srv-trace.o = -I$(src)
++CFLAGS_rtrs-srv-trace.o = -I$(srctree)/$(src)
+ 
+ rtrs-server-y := rtrs-srv.o \
+ 		  rtrs-srv-stats.o \
+diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+index 97d393fd638d..3afd6cfbe0ed 100644
+--- a/drivers/interconnect/Makefile
++++ b/drivers/interconnect/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-CFLAGS_core.o				:= -I$(src)
++CFLAGS_core.o				:= -I$(srctree)/$(src)
+ icc-core-objs				:= core.o bulk.o
+ 
+ obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+diff --git a/drivers/misc/cxl/Makefile b/drivers/misc/cxl/Makefile
+index 5eea61b9584f..b85b32c6b80e 100644
+--- a/drivers/misc/cxl/Makefile
++++ b/drivers/misc/cxl/Makefile
+@@ -11,4 +11,4 @@ obj-$(CONFIG_CXL)		+= cxl.o
+ obj-$(CONFIG_CXL_BASE)		+= base.o
+ 
+ # For tracepoints to include our trace.h from tracepoint infrastructure:
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/misc/habanalabs/Makefile b/drivers/misc/habanalabs/Makefile
+index a48a9e0969ed..51d5531b1619 100644
+--- a/drivers/misc/habanalabs/Makefile
++++ b/drivers/misc/habanalabs/Makefile
+@@ -5,16 +5,16 @@
+ 
+ obj-$(CONFIG_HABANA_AI) := habanalabs.o
+ 
+-include $(src)/common/Makefile
++include $(srctree)/$(src)/common/Makefile
+ habanalabs-y += $(HL_COMMON_FILES)
+ 
+-include $(src)/gaudi2/Makefile
++include $(srctree)/$(src)/gaudi2/Makefile
+ habanalabs-y += $(HL_GAUDI2_FILES)
+ 
+-include $(src)/gaudi/Makefile
++include $(srctree)/$(src)/gaudi/Makefile
+ habanalabs-y += $(HL_GAUDI_FILES)
+ 
+-include $(src)/goya/Makefile
++include $(srctree)/$(src)/goya/Makefile
+ habanalabs-y += $(HL_GOYA_FILES)
+ 
+ habanalabs-$(CONFIG_DEBUG_FS) += common/debugfs.o
+diff --git a/drivers/misc/habanalabs/common/Makefile b/drivers/misc/habanalabs/common/Makefile
+index e6abffea9f87..beacbf3b1587 100644
+--- a/drivers/misc/habanalabs/common/Makefile
++++ b/drivers/misc/habanalabs/common/Makefile
+@@ -1,9 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-include $(src)/common/mmu/Makefile
++include $(srctree)/$(src)/common/mmu/Makefile
+ habanalabs-y += $(HL_COMMON_MMU_FILES)
+ 
+-include $(src)/common/pci/Makefile
++include $(srctree)/$(src)/common/pci/Makefile
+ habanalabs-y += $(HL_COMMON_PCI_FILES)
+ 
+ HL_COMMON_FILES := common/habanalabs_drv.o common/device.o common/context.o \
+diff --git a/drivers/misc/mei/Makefile b/drivers/misc/mei/Makefile
+index fb740d754900..5381285dcd5d 100644
+--- a/drivers/misc/mei/Makefile
++++ b/drivers/misc/mei/Makefile
+@@ -26,7 +26,7 @@ mei-txe-objs := pci-txe.o
+ mei-txe-objs += hw-txe.o
+ 
+ mei-$(CONFIG_EVENT_TRACING) += mei-trace.o
+-CFLAGS_mei-trace.o = -I$(src)
++CFLAGS_mei-trace.o = -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_INTEL_MEI_HDCP) += hdcp/
+ obj-$(CONFIG_INTEL_MEI_PXP) += pxp/
+diff --git a/drivers/misc/ocxl/Makefile b/drivers/misc/ocxl/Makefile
+index d07d1bb8e8d4..49a57e85a1dd 100644
+--- a/drivers/misc/ocxl/Makefile
++++ b/drivers/misc/ocxl/Makefile
+@@ -7,6 +7,6 @@ ocxl-y				+= core.o
+ obj-$(CONFIG_OCXL)		+= ocxl.o
+ 
+ # For tracepoints to include our trace.h from tracepoint infrastructure:
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ # ccflags-y += -DDEBUG
+diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
+index 0362cf6bdc67..7433f350b882 100644
+--- a/drivers/mtd/devices/Makefile
++++ b/drivers/mtd/devices/Makefile
+@@ -21,4 +21,4 @@ obj-$(CONFIG_MTD_ST_SPI_FSM)    += st_spi_fsm.o
+ obj-$(CONFIG_MTD_POWERNV_FLASH)	+= powernv_flash.o
+ 
+ 
+-CFLAGS_docg3.o			+= -I$(src)
++CFLAGS_docg3.o			+= -I$(srctree)/$(src)
+diff --git a/drivers/net/dsa/mv88e6xxx/Makefile b/drivers/net/dsa/mv88e6xxx/Makefile
+index 49bf358b9c4f..33bf8d815157 100644
+--- a/drivers/net/dsa/mv88e6xxx/Makefile
++++ b/drivers/net/dsa/mv88e6xxx/Makefile
+@@ -18,4 +18,4 @@ mv88e6xxx-objs += smi.o
+ mv88e6xxx-objs += trace.o
+ 
+ # for tracing framework to find trace.h
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/ethernet/freescale/dpaa/Makefile b/drivers/net/ethernet/freescale/dpaa/Makefile
+index 4f23e79232fa..c7e505958cba 100644
+--- a/drivers/net/ethernet/freescale/dpaa/Makefile
++++ b/drivers/net/ethernet/freescale/dpaa/Makefile
+@@ -10,4 +10,4 @@ ccflags-y += -I$(FMAN)
+ obj-$(CONFIG_FSL_DPAA_ETH) += fsl_dpa.o
+ 
+ fsl_dpa-objs += dpaa_eth.o dpaa_ethtool.o dpaa_eth_sysfs.o
+-CFLAGS_dpaa_eth.o := -I$(src)
++CFLAGS_dpaa_eth.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/ethernet/freescale/dpaa2/Makefile b/drivers/net/ethernet/freescale/dpaa2/Makefile
+index 3d9842af7f10..696862507069 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/Makefile
++++ b/drivers/net/ethernet/freescale/dpaa2/Makefile
+@@ -14,4 +14,4 @@ fsl-dpaa2-ptp-objs	:= dpaa2-ptp.o dprtc.o
+ fsl-dpaa2-switch-objs	:= dpaa2-switch.o dpaa2-switch-ethtool.o dpsw.o dpaa2-switch-flower.o dpaa2-mac.o dpmac.o
+ 
+ # Needed by the tracing framework
+-CFLAGS_dpaa2-eth.o := -I$(src)
++CFLAGS_dpaa2-eth.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/ethernet/intel/i40e/Makefile b/drivers/net/ethernet/intel/i40e/Makefile
+index 2f21b3e89fd0..2fba0988084c 100644
+--- a/drivers/net/ethernet/intel/i40e/Makefile
++++ b/drivers/net/ethernet/intel/i40e/Makefile
+@@ -5,8 +5,8 @@
+ # Makefile for the Intel(R) Ethernet Connection XL710 (i40e.ko) driver
+ #
+ 
+-ccflags-y += -I$(src)
+-subdir-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
++subdir-ccflags-y += -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_I40E) += i40e.o
+ 
+diff --git a/drivers/net/ethernet/intel/iavf/Makefile b/drivers/net/ethernet/intel/iavf/Makefile
+index 9c3e45c54d01..64f126f1e581 100644
+--- a/drivers/net/ethernet/intel/iavf/Makefile
++++ b/drivers/net/ethernet/intel/iavf/Makefile
+@@ -6,8 +6,8 @@
+ #
+ #
+ 
+-ccflags-y += -I$(src)
+-subdir-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
++subdir-ccflags-y += -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_IAVF) += iavf.o
+ 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/Makefile b/drivers/net/ethernet/marvell/octeontx2/af/Makefile
+index 3cf4c8285c90..9e3364b17848 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/Makefile
++++ b/drivers/net/ethernet/marvell/octeontx2/af/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for Marvell's RVU Admin Function driver
+ #
+ 
+-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
+ obj-$(CONFIG_OCTEONTX2_MBOX) += rvu_mbox.o
+ obj-$(CONFIG_OCTEONTX2_AF) += rvu_af.o
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+index a22c32aabf11..7df83d79c702 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+@@ -4,7 +4,7 @@
+ # (ConnectX series) core & netdev driver
+ #
+ 
+-subdir-ccflags-y += -I$(src)
++subdir-ccflags-y += -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_MLX5_CORE) += mlx5_core.o
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile
+index c78512eed8d7..07b81f233e05 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
++subdir-ccflags-y += -I$(srctree)/$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile
+index c78512eed8d7..07b81f233e05 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
++subdir-ccflags-y += -I$(srctree)/$(src)/..
+diff --git a/drivers/net/wireless/ath/Makefile b/drivers/net/wireless/ath/Makefile
+index 8e4ae9de5ae4..7b2f4daccfe5 100644
+--- a/drivers/net/wireless/ath/Makefile
++++ b/drivers/net/wireless/ath/Makefile
+@@ -21,4 +21,4 @@ ath-objs :=	main.o \
+ ath-$(CONFIG_ATH_DEBUG) += debug.o
+ ath-$(CONFIG_ATH_TRACEPOINTS) += trace.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/ath/ath10k/Makefile b/drivers/net/wireless/ath/ath10k/Makefile
+index 142c777b287f..dcb7ea22c86a 100644
+--- a/drivers/net/wireless/ath/ath10k/Makefile
++++ b/drivers/net/wireless/ath/ath10k/Makefile
+@@ -41,4 +41,4 @@ ath10k_snoc-y += qmi.o \
+ 		 snoc.o
+ 
+ # for tracing framework to find trace.h
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/ath/ath11k/Makefile b/drivers/net/wireless/ath/ath11k/Makefile
+index cc47e0114595..d7dba2b83b45 100644
+--- a/drivers/net/wireless/ath/ath11k/Makefile
++++ b/drivers/net/wireless/ath/ath11k/Makefile
+@@ -33,4 +33,4 @@ obj-$(CONFIG_ATH11K_PCI) += ath11k_pci.o
+ ath11k_pci-y += mhi.o pci.o
+ 
+ # for tracing framework to find trace.h
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/ath/ath5k/Makefile b/drivers/net/wireless/ath/ath5k/Makefile
+index 78f318d49af5..bffc94c07a61 100644
+--- a/drivers/net/wireless/ath/ath5k/Makefile
++++ b/drivers/net/wireless/ath/ath5k/Makefile
+@@ -11,7 +11,7 @@ ath5k-y				+= phy.o
+ ath5k-y				+= reset.o
+ ath5k-y				+= attach.o
+ ath5k-y				+= base.o
+-CFLAGS_base.o			+= -I$(src)
++CFLAGS_base.o			+= -I$(srctree)/$(src)
+ ath5k-y				+= led.o
+ ath5k-y				+= rfkill.o
+ ath5k-y				+= ani.o
+diff --git a/drivers/net/wireless/ath/ath6kl/Makefile b/drivers/net/wireless/ath/ath6kl/Makefile
+index a75bfa9fd1cf..8c2fd8d313d4 100644
+--- a/drivers/net/wireless/ath/ath6kl/Makefile
++++ b/drivers/net/wireless/ath/ath6kl/Makefile
+@@ -51,4 +51,4 @@ obj-$(CONFIG_ATH6KL_USB) += ath6kl_usb.o
+ ath6kl_usb-y += usb.o
+ 
+ # for tracing framework to find trace.h
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/ath/wil6210/Makefile b/drivers/net/wireless/ath/wil6210/Makefile
+index 53a0d995ddb0..5cb774afd591 100644
+--- a/drivers/net/wireless/ath/wil6210/Makefile
++++ b/drivers/net/wireless/ath/wil6210/Makefile
+@@ -22,4 +22,4 @@ wil6210-y += wil_crash_dump.o
+ wil6210-y += p2p.o
+ 
+ # for tracing framework to find trace.h
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/intel/iwlwifi/Makefile b/drivers/net/wireless/intel/iwlwifi/Makefile
+index 75a703eb1bdf..d680d5842b79 100644
+--- a/drivers/net/wireless/intel/iwlwifi/Makefile
++++ b/drivers/net/wireless/intel/iwlwifi/Makefile
+@@ -26,10 +26,10 @@ iwlwifi-objs += $(iwlwifi-m)
+ 
+ iwlwifi-$(CONFIG_IWLWIFI_DEVICE_TRACING) += iwl-devtrace.o
+ 
+-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_IWLDVM)	+= dvm/
+ obj-$(CONFIG_IWLMVM)	+= mvm/
+ obj-$(CONFIG_IWLMEI)	+= mei/
+ 
+-CFLAGS_iwl-devtrace.o := -I$(src)
++CFLAGS_iwl-devtrace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mei/Makefile b/drivers/net/wireless/intel/iwlwifi/mei/Makefile
+index 8e3ef0347db7..92558ae901e5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mei/Makefile
++++ b/drivers/net/wireless/intel/iwlwifi/mei/Makefile
+@@ -3,6 +3,6 @@ obj-$(CONFIG_IWLMEI)	+= iwlmei.o
+ iwlmei-y += main.o
+ iwlmei-y += net.o
+ iwlmei-$(CONFIG_IWLWIFI_DEVICE_TRACING) += trace.o
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ ccflags-y += -I $(srctree)/$(src)/../
+diff --git a/drivers/net/wireless/mediatek/mt76/Makefile b/drivers/net/wireless/mediatek/mt76/Makefile
+index c78ae4b89761..ddf7cbb7220f 100644
+--- a/drivers/net/wireless/mediatek/mt76/Makefile
++++ b/drivers/net/wireless/mediatek/mt76/Makefile
+@@ -16,9 +16,9 @@ mt76-$(CONFIG_NL80211_TESTMODE) += testmode.o
+ mt76-usb-y := usb.o usb_trace.o
+ mt76-sdio-y := sdio.o sdio_txrx.o
+ 
+-CFLAGS_trace.o := -I$(src)
+-CFLAGS_usb_trace.o := -I$(src)
+-CFLAGS_mt76x02_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
++CFLAGS_usb_trace.o := -I$(srctree)/$(src)
++CFLAGS_mt76x02_trace.o := -I$(srctree)/$(src)
+ 
+ mt76x02-lib-y := mt76x02_util.o mt76x02_mac.o mt76x02_mcu.o \
+ 		 mt76x02_eeprom.o mt76x02_phy.o mt76x02_mmio.o \
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/Makefile b/drivers/net/wireless/mediatek/mt76/mt7615/Makefile
+index 2b97b9dde477..afe985a3573d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/Makefile
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/Makefile
+@@ -6,7 +6,7 @@ obj-$(CONFIG_MT7663_USB_SDIO_COMMON) += mt7663-usb-sdio-common.o
+ obj-$(CONFIG_MT7663U) += mt7663u.o
+ obj-$(CONFIG_MT7663S) += mt7663s.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ mt7615-common-y := main.o init.o mcu.o eeprom.o mac.o \
+ 		   debugfs.o trace.o
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/Makefile b/drivers/net/wireless/mediatek/mt76/mt7921/Makefile
+index e5d2d2e131a2..f4e733461750 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/Makefile
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/Makefile
+@@ -5,7 +5,7 @@ obj-$(CONFIG_MT7921E) += mt7921e.o
+ obj-$(CONFIG_MT7921S) += mt7921s.o
+ obj-$(CONFIG_MT7921U) += mt7921u.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ mt7921-common-y := mac.o mcu.o main.o init.o debugfs.o trace.o
+ mt7921-common-$(CONFIG_NL80211_TESTMODE) += testmode.o
+diff --git a/drivers/net/wireless/mediatek/mt7601u/Makefile b/drivers/net/wireless/mediatek/mt7601u/Makefile
+index 30f2391c782b..10ca81c4aa0c 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/Makefile
++++ b/drivers/net/wireless/mediatek/mt7601u/Makefile
+@@ -5,4 +5,4 @@ mt7601u-objs	= \
+ 	usb.o init.o main.o mcu.o trace.o dma.o core.o eeprom.o phy.o \
+ 	mac.o util.o debugfs.o tx.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/drivers/net/wireless/rtl8189es/Makefile b/drivers/net/wireless/rtl8189es/Makefile
+index faa4c0cb66d5..646ecc4e9e0a 100644
+--- a/drivers/net/wireless/rtl8189es/Makefile
++++ b/drivers/net/wireless/rtl8189es/Makefile
+@@ -19,7 +19,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -249,10 +249,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2200,26 +2200,26 @@ EXTRA_CFLAGS += $(USER_EXTRA_CFLAGS)
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ ########### HAL_RTL8822C #################################
+ ifeq ($(CONFIG_RTL8822C), y)
+-include $(src)/rtl8822c.mk
++include $(srctree)/$(src)/rtl8822c.mk
+ endif
+ 
+ ########### HAL_RTL8814B #################################
+ ifeq ($(CONFIG_RTL8814B), y)
+-include $(src)/rtl8814b.mk
++include $(srctree)/$(src)/rtl8814b.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+diff --git a/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk
+index 686350c585b5..15dfba3a7715 100755
+--- a/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8189fs/Makefile b/drivers/net/wireless/rtl8189fs/Makefile
+index fd5fb4350def..979235712bd8 100644
+--- a/drivers/net/wireless/rtl8189fs/Makefile
++++ b/drivers/net/wireless/rtl8189fs/Makefile
+@@ -20,7 +20,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+@@ -250,10 +250,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2212,21 +2212,21 @@ endif
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ ########### HAL_RTL8822C #################################
+ ifeq ($(CONFIG_RTL8822C), y)
+-include $(src)/rtl8822c.mk
++include $(srctree)/$(src)/rtl8822c.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+diff --git a/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk
+index 88ce6059a03e..b02f71e4660c 100755
+--- a/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8192eu/Makefile b/drivers/net/wireless/rtl8192eu/Makefile
+index 8ecdb72d6e0f..d574092453b7 100644
+--- a/drivers/net/wireless/rtl8192eu/Makefile
++++ b/drivers/net/wireless/rtl8192eu/Makefile
+@@ -11,7 +11,7 @@ GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
+ ifeq ($(GCC_VER_49),1)
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -251,10 +251,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2205,16 +2205,16 @@ endif
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+diff --git a/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk
+index a05df647d9df..3581cad77376 100644
+--- a/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8723ds/Makefile b/drivers/net/wireless/rtl8723ds/Makefile
+index ddd45612e06f..3748a4d288a3 100644
+--- a/drivers/net/wireless/rtl8723ds/Makefile
++++ b/drivers/net/wireless/rtl8723ds/Makefile
+@@ -19,8 +19,8 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -232,11 +232,11 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
+ 		hal/phydm/phydm_ccx.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+ ifeq ($(CONFIG_BT_COEXIST), y)
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ _OUTSRC_FILES += hal/btc/HalBtc8192e1Ant.o \
+ 				hal/btc/HalBtc8192e2Ant.o \
+ 				hal/btc/HalBtc8723b1Ant.o \
+diff --git a/drivers/net/wireless/rtl8723du/Makefile b/drivers/net/wireless/rtl8723du/Makefile
+index 1b39e2722942..d5f978817e51 100644
+--- a/drivers/net/wireless/rtl8723du/Makefile
++++ b/drivers/net/wireless/rtl8723du/Makefile
+@@ -6,7 +6,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ #EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -59,10 +59,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/hal_usb_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal
+ 
+ include $(TopDIR)/hal/phydm/phydm.mk
+ ########### HAL_RTL8723D #################################
+diff --git a/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk
+index b11038fe24c0..31a2ac430226 100644
+--- a/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 			hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8811cu/Makefile b/drivers/net/wireless/rtl8811cu/Makefile
+index 1051a18a3cf0..c68f747d0728 100644
+--- a/drivers/net/wireless/rtl8811cu/Makefile
++++ b/drivers/net/wireless/rtl8811cu/Makefile
+@@ -28,7 +28,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -282,10 +282,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2385,31 +2385,31 @@ endif
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ ########### HAL_RTL8822C #################################
+ ifeq ($(CONFIG_RTL8822C), y)
+-include $(src)/rtl8822c.mk
++include $(srctree)/$(src)/rtl8822c.mk
+ endif
+ 
+ ########### HAL_RTL8814B #################################
+ ifeq ($(CONFIG_RTL8814B), y)
+-include $(src)/rtl8814b.mk
++include $(srctree)/$(src)/rtl8814b.mk
+ endif
+ 
+ ########### HAL_RTL8723F #################################
+ ifeq ($(CONFIG_RTL8723F), y)
+-include $(src)/rtl8723f.mk
++include $(srctree)/$(src)/rtl8723f.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+@@ -2459,7 +2459,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk
+index 042db19d26ba..7454bfe52810 100644
+--- a/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8811cu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8811cu/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rtl8811cu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8811cu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8811cu/rtl8821c.mk b/drivers/net/wireless/rtl8811cu/rtl8821c.mk
+index 28e21cdc9ab5..0ef7d625ed4f 100644
+--- a/drivers/net/wireless/rtl8811cu/rtl8821c.mk
++++ b/drivers/net/wireless/rtl8811cu/rtl8821c.mk
+@@ -36,7 +36,7 @@ ifeq ($(CONFIG_PCI_HCI), y)
+ _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8821C_PCIE.o
+ endif
+ 
+-include $(src)/halmac.mk
++include $(srctree)/$(src)/halmac.mk
+ 
+ _BTC_FILES += hal/btc/halbtc8821cwifionly.o
+ ifeq ($(CONFIG_BT_COEXIST), y)
+diff --git a/drivers/net/wireless/rtl8812au/Makefile b/drivers/net/wireless/rtl8812au/Makefile
+index 69585ae65f9e..929deb7caa35 100755
+--- a/drivers/net/wireless/rtl8812au/Makefile
++++ b/drivers/net/wireless/rtl8812au/Makefile
+@@ -20,7 +20,7 @@ EXTRA_CFLAGS += -Wno-vla -g
+ #EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ #endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ EXTRA_LDFLAGS += --strip-all -O3
+ 
+ ########################## WIFI IC ############################
+@@ -230,10 +230,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2179,16 +2179,16 @@ endif
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+diff --git a/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk
+index a05df647d9df..3581cad77376 100644
+--- a/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl88x2bu/Makefile b/drivers/net/wireless/rtl88x2bu/Makefile
+index 1cd1c6a7043b..07b012cc4246 100644
+--- a/drivers/net/wireless/rtl88x2bu/Makefile
++++ b/drivers/net/wireless/rtl88x2bu/Makefile
+@@ -28,7 +28,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -285,10 +285,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2383,31 +2383,31 @@ endif
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ ########### HAL_RTL8822C #################################
+ ifeq ($(CONFIG_RTL8822C), y)
+-include $(src)/rtl8822c.mk
++include $(srctree)/$(src)/rtl8822c.mk
+ endif
+ 
+ ########### HAL_RTL8814B #################################
+ ifeq ($(CONFIG_RTL8814B), y)
+-include $(src)/rtl8814b.mk
++include $(srctree)/$(src)/rtl8814b.mk
+ endif
+ 
+ ########### HAL_RTL8723F #################################
+ ifeq ($(CONFIG_RTL8723F), y)
+-include $(src)/rtl8723f.mk
++include $(srctree)/$(src)/rtl8723f.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+@@ -2457,7 +2457,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk
+index c5d0ce95ead3..6e1bd2bd3684 100644
+--- a/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl88x2bu/rtl8822b.mk b/drivers/net/wireless/rtl88x2bu/rtl8822b.mk
+index 47efae16eada..3fd8196c8d1e 100644
+--- a/drivers/net/wireless/rtl88x2bu/rtl8822b.mk
++++ b/drivers/net/wireless/rtl88x2bu/rtl8822b.mk
+@@ -47,7 +47,7 @@ _HAL_INTFS_FILES +=	hal/rtl8822b/$(HCI_NAME)/rtl8822bs_halinit.o \
+ _HAL_INTFS_FILES +=hal/efuse/rtl8822b/HalEfuseMask8822B_SDIO.o
+ endif
+ 
+-include $(src)/halmac.mk
++include $(srctree)/$(src)/halmac.mk
+ 
+ _BTC_FILES += hal/btc/halbtc8822bwifionly.o
+ ifeq ($(CONFIG_BT_COEXIST), y)
+diff --git a/drivers/net/wireless/rtl88x2cs/Makefile b/drivers/net/wireless/rtl88x2cs/Makefile
+index 814cf1e1ba5f..b825f9e3bff2 100755
+--- a/drivers/net/wireless/rtl88x2cs/Makefile
++++ b/drivers/net/wireless/rtl88x2cs/Makefile
+@@ -20,7 +20,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -268,10 +268,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2302,27 +2302,27 @@ endif
+ ifneq ($(KERNELRELEASE),)
+ 
+ ########### this part for *.mk ############################
+-include $(src)/hal/phydm/phydm.mk
++include $(srctree)/$(src)/hal/phydm/phydm.mk
+ 
+ ########### HAL_RTL8822B #################################
+ ifeq ($(CONFIG_RTL8822B), y)
+-include $(src)/rtl8822b.mk
++include $(srctree)/$(src)/rtl8822b.mk
+ endif
+ 
+ ########### HAL_RTL8821C #################################
+ ifeq ($(CONFIG_RTL8821C), y)
+-include $(src)/rtl8821c.mk
++include $(srctree)/$(src)/rtl8821c.mk
+ endif
+ 
+ ########### HAL_RTL8822C #################################
+ ifeq ($(CONFIG_RTL8822C), y)
+-include $(TopDIR)/drivers/net/wireless/rtl88x2cs/rtl8822c.mk
++include $(srctree)/$(src)/rtl8822c.mk
+ EXTRA_CFLAGS += -DCONFIG_RTW_IOCTL_SET_COUNTRY
+ endif
+ 
+ ########### HAL_RTL8814B #################################
+ ifeq ($(CONFIG_RTL8814B), y)
+-include $(src)/rtl8814b.mk
++include $(srctree)/$(src)/rtl8814b.mk
+ endif
+ 
+ rtk_core :=	core/rtw_cmd.o \
+@@ -2370,7 +2370,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk b/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk
+index 305200b879e1..28885480295e 100644
+--- a/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl88x2cs/rtl8822c.mk b/drivers/net/wireless/rtl88x2cs/rtl8822c.mk
+index ee62bcdf96fe..f5b2c3d7358c 100755
+--- a/drivers/net/wireless/rtl88x2cs/rtl8822c.mk
++++ b/drivers/net/wireless/rtl88x2cs/rtl8822c.mk
+@@ -49,7 +49,7 @@ _HAL_INTFS_FILES +=hal/efuse/rtl8822c/HalEfuseMask8822C_SDIO.o
+ _HAL_INTFS_FILES +=hal/hal_hci/hal_sdio_coex.o
+ endif
+ 
+-include $(src)/halmac.mk
++include $(srctree)/$(src)/halmac.mk
+ 
+ _BTC_FILES += hal/btc/halbtc8822cwifionly.o
+ ifeq ($(CONFIG_BT_COEXIST), y)
+diff --git a/drivers/net/wireless/silabs/wfx/Makefile b/drivers/net/wireless/silabs/wfx/Makefile
+index c8b356f71c99..24d73c0179f2 100644
+--- a/drivers/net/wireless/silabs/wfx/Makefile
++++ b/drivers/net/wireless/silabs/wfx/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ # Necessary for CREATE_TRACE_POINTS
+-CFLAGS_debug.o = -I$(src)
++CFLAGS_debug.o = -I$(srctree)/$(src)
+ 
+ wfx-y := \
+ 	bh.o \
+diff --git a/drivers/net/wireless/uwe5622/Makefile b/drivers/net/wireless/uwe5622/Makefile
+index 313ea512340c..7fc0fb269e1e 100644
+--- a/drivers/net/wireless/uwe5622/Makefile
++++ b/drivers/net/wireless/uwe5622/Makefile
+@@ -2,7 +2,7 @@ obj-$(CONFIG_AW_WIFI_DEVICE_UWE5622) += unisocwcn/
+ obj-$(CONFIG_WLAN_UWE5622)    += unisocwifi/
+ obj-$(CONFIG_TTY_OVERY_SDIO)  += tty-sdio/
+ 
+-UNISOCWCN_DIR := $(shell cd $(src)/unisocwcn/ && /bin/pwd)
++UNISOCWCN_DIR := $(srctree)/drivers/net/wireless/uwe5622/unisocwcn
+ UNISOC_BSP_INCLUDE := $(UNISOCWCN_DIR)/include
+ export UNISOC_BSP_INCLUDE
+ 
+diff --git a/drivers/net/wireless/uwe5622/unisocwcn/Makefile b/drivers/net/wireless/uwe5622/unisocwcn/Makefile
+index f9c595747547..69fba408a8f3 100644
+--- a/drivers/net/wireless/uwe5622/unisocwcn/Makefile
++++ b/drivers/net/wireless/uwe5622/unisocwcn/Makefile
+@@ -129,9 +129,9 @@ ccflags-y += -DCONFIG_WCN_BOOT
+ ccflags-y += -DCONFIG_WCN_UTILS
+ 
+ #### include path ######
+-ccflags-y += -I$(src)/include/
+-ccflags-y += -I$(src)/platform/
+-ccflags-y += -I$(src)/platform/rf/
++ccflags-y += -I$(srctree)/$(src)/include/
++ccflags-y += -I$(srctree)/$(src)/platform/
++ccflags-y += -I$(srctree)/$(src)/platform/rf/
+ 
+ #### add cflag for Customer ######
+ ### ---------- Hisilicon start ---------- ###
+@@ -405,7 +405,7 @@ KDIR ?= $(ANDROID_PRODUCT_OUT)/obj/KERNEL_OBJ
+ ARCH ?= arm
+ CROSS_COMPILE ?= arm-histbv310-linux-
+ 
+-EXTRA_CFLAGS += -I$(src)/include -D__linux__
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include -D__linux__
+ 
+ all: $(all_dependencies)
+ 
+diff --git a/drivers/nvme/common/Makefile b/drivers/nvme/common/Makefile
+index 720c625b8a52..ec80252cac65 100644
+--- a/drivers/nvme/common/Makefile
++++ b/drivers/nvme/common/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-ccflags-y			+= -I$(src)
++ccflags-y			+= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_NVME_COMMON)	+= nvme-common.o
+ 
+diff --git a/drivers/nvme/host/Makefile b/drivers/nvme/host/Makefile
+index e27202d22c7d..33aba2ee298e 100644
+--- a/drivers/nvme/host/Makefile
++++ b/drivers/nvme/host/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-ccflags-y				+= -I$(src)
++ccflags-y				+= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_NVME_CORE)			+= nvme-core.o
+ obj-$(CONFIG_BLK_DEV_NVME)		+= nvme.o
+diff --git a/drivers/nvme/target/Makefile b/drivers/nvme/target/Makefile
+index c66820102493..56648675bfb2 100644
+--- a/drivers/nvme/target/Makefile
++++ b/drivers/nvme/target/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-ccflags-y				+= -I$(src)
++ccflags-y				+= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_NVME_TARGET)		+= nvmet.o
+ obj-$(CONFIG_NVME_TARGET_LOOP)		+= nvme-loop.o
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index 2950610101f1..5eee4c22fa26 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # tell define_trace.h where to find the cros ec trace header
+-CFLAGS_cros_ec_trace.o:=		-I$(src)
+-CFLAGS_cros_ec_sensorhub_ring.o:=	-I$(src)
++CFLAGS_cros_ec_trace.o:=		-I$(srctree)/$(src)
++CFLAGS_cros_ec_sensorhub_ring.o:=	-I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_CHROMEOS_ACPI)		+= chromeos_acpi.o
+ obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
+diff --git a/drivers/platform/surface/aggregator/Makefile b/drivers/platform/surface/aggregator/Makefile
+index fdf664a217f9..de58b3eca7f6 100644
+--- a/drivers/platform/surface/aggregator/Makefile
++++ b/drivers/platform/surface/aggregator/Makefile
+@@ -2,7 +2,7 @@
+ # Copyright (C) 2019-2022 Maximilian Luz <luzmaximilian@gmail.com>
+ 
+ # For include/trace/define_trace.h to include trace.h
+-CFLAGS_core.o = -I$(src)
++CFLAGS_core.o = -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_SURFACE_AGGREGATOR) += surface_aggregator.o
+ 
+diff --git a/drivers/s390/cio/Makefile b/drivers/s390/cio/Makefile
+index 3bd1c245183f..66e8dcd581a5 100644
+--- a/drivers/s390/cio/Makefile
++++ b/drivers/s390/cio/Makefile
+@@ -4,8 +4,8 @@
+ #
+ 
+ # The following is required for define_trace.h to find ./trace.h
+-CFLAGS_trace.o := -I$(src)
+-CFLAGS_vfio_ccw_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
++CFLAGS_vfio_ccw_trace.o := -I$(srctree)/$(src)
+ 
+ obj-y += airq.o blacklist.o chsc.o cio.o css.o chp.o idset.o isc.o \
+ 	fcx.o itcw.o crw.o ccwreq.o trace.o ioasm.o cio_debugfs.o
+diff --git a/drivers/scsi/pm8001/Makefile b/drivers/scsi/pm8001/Makefile
+index bbb51b7312f1..b879e4c35deb 100644
+--- a/drivers/scsi/pm8001/Makefile
++++ b/drivers/scsi/pm8001/Makefile
+@@ -7,7 +7,7 @@
+ 
+ obj-$(CONFIG_SCSI_PM8001) += pm80xx.o
+ 
+-CFLAGS_pm80xx_tracepoints.o := -I$(src)
++CFLAGS_pm80xx_tracepoints.o := -I$(srctree)/$(src)
+ 
+ pm80xx-y += pm8001_init.o \
+ 		pm8001_sas.o  \
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index d66604aff2b0..1893b3ae18e0 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CFLAGS_rpmh-rsc.o := -I$(src)
++CFLAGS_rpmh-rsc.o := -I$(srctree)/$(src)
+ obj-$(CONFIG_QCOM_AOSS_QMP) +=	qcom_aoss.o
+ obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
+ obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
+diff --git a/drivers/staging/greybus/Makefile b/drivers/staging/greybus/Makefile
+index 7c5e89622334..952c5cec2b3f 100644
+--- a/drivers/staging/greybus/Makefile
++++ b/drivers/staging/greybus/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # needed for trace events
+-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
+ 
+ # Greybus class drivers
+ gb-bootrom-y		:= bootrom.o
+diff --git a/drivers/tee/optee/Makefile b/drivers/tee/optee/Makefile
+index a6eff388d300..16ff22ee7194 100644
+--- a/drivers/tee/optee/Makefile
++++ b/drivers/tee/optee/Makefile
+@@ -10,4 +10,4 @@ optee-objs += smc_abi.o
+ optee-objs += ffa_abi.o
+ 
+ # for tracing framework to find optee_trace.h
+-CFLAGS_smc_abi.o := -I$(src)
++CFLAGS_smc_abi.o := -I$(srctree)/$(src)
+diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+index 61edb2f89276..662be7226dab 100644
+--- a/drivers/usb/cdns3/Makefile
++++ b/drivers/usb/cdns3/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # define_trace.h needs to know how to find our header
+-CFLAGS_cdns3-trace.o				:= -I$(src)
+-CFLAGS_cdnsp-trace.o				:= -I$(src)
++CFLAGS_cdns3-trace.o				:= -I$(srctree)/$(src)
++CFLAGS_cdnsp-trace.o				:= -I$(srctree)/$(src)
+ 
+ cdns-usb-common-y				:= core.o drd.o
+ cdns3-y						:= cdns3-plat.o
+diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+index 6f4a3deced35..fb13b3334996 100644
+--- a/drivers/usb/chipidea/Makefile
++++ b/drivers/usb/chipidea/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # define_trace.h needs to know how to find our header
+-CFLAGS_trace.o			:= -I$(src)
++CFLAGS_trace.o			:= -I$(srctree)/$(src)
+ obj-$(CONFIG_USB_CHIPIDEA)		+= ci_hdrc.o
+ 
+ ci_hdrc-y				:= core.o otg.o debug.o ulpi.o
+diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+index 9f66bd82b639..a40a751c28c7 100644
+--- a/drivers/usb/dwc3/Makefile
++++ b/drivers/usb/dwc3/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # define_trace.h needs to know how to find our header
+-CFLAGS_trace.o				:= -I$(src)
++CFLAGS_trace.o				:= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_USB_DWC3)			+= dwc3.o
+ 
+diff --git a/drivers/usb/gadget/udc/Makefile b/drivers/usb/gadget/udc/Makefile
+index 12f9e4c9eb0c..98b105a58e61 100644
+--- a/drivers/usb/gadget/udc/Makefile
++++ b/drivers/usb/gadget/udc/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # define_trace.h needs to know how to find our header
+-CFLAGS_trace.o			:= -I$(src)
++CFLAGS_trace.o			:= -I$(srctree)/$(src)
+ 
+ udc-core-y			:= core.o trace.o
+ 
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index 2c8a61be7e46..fd758705d0d5 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -4,7 +4,7 @@
+ #
+ 
+ # tell define_trace.h where to find the xhci trace header
+-CFLAGS_xhci-trace.o := -I$(src)
++CFLAGS_xhci-trace.o := -I$(srctree)/$(src)
+ 
+ fhci-y := fhci-hcd.o fhci-hub.o fhci-q.o
+ fhci-y += fhci-mem.o fhci-tds.o fhci-sched.o
+diff --git a/drivers/usb/mtu3/Makefile b/drivers/usb/mtu3/Makefile
+index 3bf8cbcc1add..bb8d457eec59 100644
+--- a/drivers/usb/mtu3/Makefile
++++ b/drivers/usb/mtu3/Makefile
+@@ -3,7 +3,7 @@
+ ccflags-$(CONFIG_USB_MTU3_DEBUG)	+= -DDEBUG
+ 
+ # define_trace.h needs to know how to find our header
+-CFLAGS_mtu3_trace.o	:= -I$(src)
++CFLAGS_mtu3_trace.o	:= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_USB_MTU3)	+= mtu3.o
+ 
+diff --git a/drivers/usb/musb/Makefile b/drivers/usb/musb/Makefile
+index 51dd54a8de49..88d9640bb559 100644
+--- a/drivers/usb/musb/Makefile
++++ b/drivers/usb/musb/Makefile
+@@ -4,7 +4,7 @@
+ #
+ 
+ # define_trace.h needs to know how to find our header
+-CFLAGS_musb_trace.o	:= -I$(src)
++CFLAGS_musb_trace.o	:= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_USB_MUSB_HDRC) += musb_hdrc.o
+ 
+diff --git a/drivers/usb/typec/tipd/Makefile b/drivers/usb/typec/tipd/Makefile
+index aa439f80a889..de19867b5714 100644
+--- a/drivers/usb/typec/tipd/Makefile
++++ b/drivers/usb/typec/tipd/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CFLAGS_trace.o			:= -I$(src)
++CFLAGS_trace.o			:= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
+ tps6598x-y			:= core.o
+diff --git a/drivers/usb/typec/ucsi/Makefile b/drivers/usb/typec/ucsi/Makefile
+index 480d533d762f..1370ae3f353d 100644
+--- a/drivers/usb/typec/ucsi/Makefile
++++ b/drivers/usb/typec/ucsi/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CFLAGS_trace.o				:= -I$(src)
++CFLAGS_trace.o				:= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_TYPEC_UCSI)		+= typec_ucsi.o
+ 
+diff --git a/fs/cifs/Makefile b/fs/cifs/Makefile
+index 7c9785973f49..c64d43fd6c8e 100644
+--- a/fs/cifs/Makefile
++++ b/fs/cifs/Makefile
+@@ -2,7 +2,7 @@
+ #
+ # Makefile for Linux CIFS/SMB2/SMB3 VFS client
+ #
+-ccflags-y += -I$(src)		# needed for trace events
++ccflags-y += -I$(srctree)/$(src)		# needed for trace events
+ obj-$(CONFIG_CIFS) += cifs.o
+ 
+ cifs-y := trace.o cifsfs.o cifs_debug.o connect.o dir.o file.o \
+diff --git a/fs/gfs2/Makefile b/fs/gfs2/Makefile
+index 41b2aa4bc3bf..61c16b1f39ed 100644
+--- a/fs/gfs2/Makefile
++++ b/fs/gfs2/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y := -I$(src)
++ccflags-y := -I$(srctree)/$(src)
+ obj-$(CONFIG_GFS2_FS) += gfs2.o
+ gfs2-y := acl.o bmap.o dir.o xattr.o glock.o \
+ 	glops.o log.o lops.o main.o meta_io.o \
+diff --git a/fs/nfs/Makefile b/fs/nfs/Makefile
+index 5f6db37f461e..5b7ca68fcb4b 100644
+--- a/fs/nfs/Makefile
++++ b/fs/nfs/Makefile
+@@ -5,7 +5,7 @@
+ 
+ obj-$(CONFIG_NFS_FS) += nfs.o
+ 
+-CFLAGS_nfstrace.o += -I$(src)
++CFLAGS_nfstrace.o += -I$(srctree)/$(src)
+ nfs-y 			:= client.o dir.o file.o getroot.o inode.o super.o \
+ 			   io.o direct.o pagelist.o read.o symlink.o unlink.o \
+ 			   write.o namespace.o mount_clnt.o nfstrace.o \
+@@ -22,7 +22,7 @@ nfsv3-y := nfs3super.o nfs3client.o nfs3proc.o nfs3xdr.o
+ nfsv3-$(CONFIG_NFS_V3_ACL) += nfs3acl.o
+ 
+ obj-$(CONFIG_NFS_V4) += nfsv4.o
+-CFLAGS_nfs4trace.o += -I$(src)
++CFLAGS_nfs4trace.o += -I$(srctree)/$(src)
+ nfsv4-y := nfs4proc.o nfs4xdr.o nfs4state.o nfs4renewd.o nfs4super.o nfs4file.o \
+ 	  delegation.o nfs4idmap.o callback.o callback_xdr.o callback_proc.o \
+ 	  nfs4namespace.o nfs4getroot.o nfs4client.o nfs4session.o \
+diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+index 805c06d5f1b4..3c259b106684 100644
+--- a/fs/nfsd/Makefile
++++ b/fs/nfsd/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for the Linux nfs server
+ #
+ 
+-ccflags-y += -I$(src)			# needed for trace events
++ccflags-y += -I$(srctree)/$(src)			# needed for trace events
+ 
+ obj-$(CONFIG_NFSD)	+= nfsd.o
+ 
+diff --git a/fs/ocfs2/Makefile b/fs/ocfs2/Makefile
+index cc9b32b9db7c..67a789189591 100644
+--- a/fs/ocfs2/Makefile
++++ b/fs/ocfs2/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y := -I$(src)
++ccflags-y := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_OCFS2_FS) += 	\
+ 	ocfs2.o			\
+diff --git a/fs/zonefs/Makefile b/fs/zonefs/Makefile
+index 645f7229de4a..1bb7e8ca5c2f 100644
+--- a/fs/zonefs/Makefile
++++ b/fs/zonefs/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y				+= -I$(src)
++ccflags-y				+= -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_ZONEFS_FS) += zonefs.o
+ 
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index c6651e16b557..d3235cb31c3b 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -35,10 +35,10 @@ endif
+ # code and produce random code coverage.
+ KCOV_INSTRUMENT_trace_preemptirq.o := n
+ 
+-CFLAGS_bpf_trace.o := -I$(src)
++CFLAGS_bpf_trace.o := -I$(srctree)/$(src)
+ 
+-CFLAGS_trace_benchmark.o := -I$(src)
+-CFLAGS_trace_events_filter.o := -I$(src)
++CFLAGS_trace_benchmark.o := -I$(srctree)/$(src)
++CFLAGS_trace_events_filter.o := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_TRACE_CLOCK) += trace_clock.o
+ 
+diff --git a/net/batman-adv/Makefile b/net/batman-adv/Makefile
+index 3bd0760c76a2..192371f8fad1 100644
+--- a/net/batman-adv/Makefile
++++ b/net/batman-adv/Makefile
+@@ -31,4 +31,4 @@ batman-adv-y += tp_meter.o
+ batman-adv-y += translation-table.o
+ batman-adv-y += tvlv.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/net/dccp/Makefile b/net/dccp/Makefile
+index 5b4ff37bc806..85113b7ad78f 100644
+--- a/net/dccp/Makefile
++++ b/net/dccp/Makefile
+@@ -27,4 +27,4 @@ dccp-$(CONFIG_SYSCTL) += sysctl.o
+ dccp_diag-y := diag.o
+ 
+ # build with local directory for trace.h
+-CFLAGS_proto.o := -I$(src)
++CFLAGS_proto.o := -I$(srctree)/$(src)
+diff --git a/net/ieee802154/Makefile b/net/ieee802154/Makefile
+index f05b7bdae2aa..f5d7af13247d 100644
+--- a/net/ieee802154/Makefile
++++ b/net/ieee802154/Makefile
+@@ -7,4 +7,4 @@ ieee802154-y := netlink.o nl-mac.o nl-phy.o nl_policy.o core.o \
+                 header_ops.o sysfs.o nl802154.o trace.o
+ ieee802154_socket-y := socket.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/net/l2tp/Makefile b/net/l2tp/Makefile
+index cf8f27071d3f..c162c3c308c7 100644
+--- a/net/l2tp/Makefile
++++ b/net/l2tp/Makefile
+@@ -5,7 +5,7 @@
+ 
+ obj-$(CONFIG_L2TP) += l2tp_core.o
+ 
+-CFLAGS_l2tp_core.o += -I$(src)
++CFLAGS_l2tp_core.o += -I$(srctree)/$(src)
+ 
+ # Build l2tp as modules if L2TP is M
+ obj-$(subst y,$(CONFIG_L2TP),$(CONFIG_PPPOL2TP)) += l2tp_ppp.o
+diff --git a/net/mac80211/Makefile b/net/mac80211/Makefile
+index b8de44da1fb8..5fbc4a2310f1 100644
+--- a/net/mac80211/Makefile
++++ b/net/mac80211/Makefile
+@@ -55,7 +55,7 @@ mac80211-$(CONFIG_MAC80211_MESH) += \
+ 
+ mac80211-$(CONFIG_PM) += pm.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ rc80211_minstrel-y := \
+ 	rc80211_minstrel_ht.o
+diff --git a/net/mac802154/Makefile b/net/mac802154/Makefile
+index 4059295fdbf8..19d6c8417909 100644
+--- a/net/mac802154/Makefile
++++ b/net/mac802154/Makefile
+@@ -3,4 +3,4 @@ obj-$(CONFIG_MAC802154)	+= mac802154.o
+ mac802154-objs		:= main.o rx.o tx.o mac_cmd.o mib.o \
+ 			   iface.o llsec.o util.o cfg.o trace.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+diff --git a/net/openvswitch/Makefile b/net/openvswitch/Makefile
+index 28982630bef3..2e7db95b6f16 100644
+--- a/net/openvswitch/Makefile
++++ b/net/openvswitch/Makefile
+@@ -26,4 +26,4 @@ obj-$(CONFIG_OPENVSWITCH_VXLAN)+= vport-vxlan.o
+ obj-$(CONFIG_OPENVSWITCH_GENEVE)+= vport-geneve.o
+ obj-$(CONFIG_OPENVSWITCH_GRE)	+= vport-gre.o
+ 
+-CFLAGS_openvswitch_trace.o = -I$(src)
++CFLAGS_openvswitch_trace.o = -I$(srctree)/$(src)
+diff --git a/net/smc/Makefile b/net/smc/Makefile
+index 875efcd126a2..887167626d3b 100644
+--- a/net/smc/Makefile
++++ b/net/smc/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ccflags-y += -I$(src)
++ccflags-y += -I$(srctree)/$(src)
+ obj-$(CONFIG_SMC)	+= smc.o
+ obj-$(CONFIG_SMC_DIAG)	+= smc_diag.o
+ smc-y := af_smc.o smc_pnet.o smc_ib.o smc_clc.o smc_core.o smc_wr.o smc_llc.o
+diff --git a/net/tipc/Makefile b/net/tipc/Makefile
+index ee49a9f1dd4f..2205a7a0dd26 100644
+--- a/net/tipc/Makefile
++++ b/net/tipc/Makefile
+@@ -11,7 +11,7 @@ tipc-y	+= addr.o bcast.o bearer.o \
+ 	   netlink.o netlink_compat.o node.o socket.o eth_media.o \
+ 	   topsrv.o group.o trace.o
+ 
+-CFLAGS_trace.o += -I$(src)
++CFLAGS_trace.o += -I$(srctree)/$(src)
+ 
+ tipc-$(CONFIG_TIPC_MEDIA_UDP)	+= udp_media.o
+ tipc-$(CONFIG_TIPC_MEDIA_IB)	+= ib_media.o
+diff --git a/net/tls/Makefile b/net/tls/Makefile
+index e41c800489ac..77389550d7c4 100644
+--- a/net/tls/Makefile
++++ b/net/tls/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for the TLS subsystem.
+ #
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_TLS) += tls.o
+ 
+diff --git a/net/wireless/Makefile b/net/wireless/Makefile
+index 527ae669f6f7..efea373b268d 100644
+--- a/net/wireless/Makefile
++++ b/net/wireless/Makefile
+@@ -17,7 +17,7 @@ cfg80211-$(CONFIG_OF) += of.o
+ cfg80211-$(CONFIG_CFG80211_DEBUGFS) += debugfs.o
+ cfg80211-$(CONFIG_CFG80211_WEXT) += wext-compat.o wext-sme.o
+ 
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ cfg80211-$(CONFIG_CFG80211_USE_KERNEL_REGDB_KEYS) += shipped-certs.o
+ ifneq ($(CONFIG_CFG80211_EXTRA_REGDB_KEYDIR),)
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 727da3c5879b..ce56ef9c0103 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -341,10 +341,10 @@ $(obj)/hbm_edt_kern.o: $(src)/hbm.h $(src)/hbm_kern.h
+ # Override includes for xdp_sample_user.o because $(srctree)/usr/include in
+ # TPROGS_CFLAGS causes conflicts
+ XDP_SAMPLE_CFLAGS += -Wall -O2 \
+-		     -I$(src)/../../tools/include \
+-		     -I$(src)/../../tools/include/uapi \
++		     -I$(srctree)/$(src)/../../tools/include \
++		     -I$(srctree)/$(src)/../../tools/include/uapi \
+ 		     -I$(LIBBPF_INCLUDE) \
+-		     -I$(src)/../../tools/testing/selftests/bpf
++		     -I$(srctree)/$(src)/../../tools/testing/selftests/bpf
+ 
+ $(obj)/$(XDP_SAMPLE): TPROGS_CFLAGS = $(XDP_SAMPLE_CFLAGS)
+ $(obj)/$(XDP_SAMPLE): $(src)/xdp_sample_user.h $(src)/xdp_sample_shared.h
+diff --git a/samples/ftrace/Makefile b/samples/ftrace/Makefile
+index faf8cdb79c5f..efd62a8b7741 100644
+--- a/samples/ftrace/Makefile
++++ b/samples/ftrace/Makefile
+@@ -6,5 +6,5 @@ obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct-modify.o
+ obj-$(CONFIG_SAMPLE_FTRACE_DIRECT_MULTI) += ftrace-direct-multi.o
+ obj-$(CONFIG_SAMPLE_FTRACE_DIRECT_MULTI) += ftrace-direct-multi-modify.o
+ 
+-CFLAGS_sample-trace-array.o := -I$(src)
++CFLAGS_sample-trace-array.o := -I$(srctree)/$(src)
+ obj-$(CONFIG_SAMPLE_TRACE_ARRAY) += sample-trace-array.o
+diff --git a/samples/trace_events/Makefile b/samples/trace_events/Makefile
+index b3808bb4cf8b..70f9c3634c47 100644
+--- a/samples/trace_events/Makefile
++++ b/samples/trace_events/Makefile
+@@ -10,8 +10,8 @@
+ #
+ # Here trace-events-sample.c does the CREATE_TRACE_POINTS.
+ #
+-CFLAGS_trace-events-sample.o := -I$(src)
+-CFLAGS_trace_custom_sched.o := -I$(src)
++CFLAGS_trace-events-sample.o := -I$(srctree)/$(src)
++CFLAGS_trace_custom_sched.o := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_SAMPLE_TRACE_EVENTS) += trace-events-sample.o
+ obj-$(CONFIG_SAMPLE_TRACE_CUSTOM_EVENTS) += trace_custom_sched.o
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 1a92226202fc..e2f72a1295f1 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -581,7 +581,7 @@ TRACE_EVENT(foo_rel_loc,
+  * But the safest and easiest way to simply make it use the directory
+  * that the file is in is to add in the Makefile:
+  *
+- * CFLAGS_trace-events-sample.o := -I$(src)
++ * CFLAGS_trace-events-sample.o := -I$(srctree)/$(src)
+  *
+  * This will make sure the current path is part of the include
+  * structure for our file so that define_trace.h can find it.
+diff --git a/samples/trace_events/trace_custom_sched.h b/samples/trace_events/trace_custom_sched.h
+index 951388334a3f..c4c46ceb699d 100644
+--- a/samples/trace_events/trace_custom_sched.h
++++ b/samples/trace_events/trace_custom_sched.h
+@@ -82,7 +82,7 @@ TRACE_CUSTOM_EVENT(sched_waking,
+ 
+ /*
+  * It is required that the Makefile includes:
+- *    CFLAGS_<c_file>.o := -I$(src)
++ *    CFLAGS_<c_file>.o := -I$(srctree)/$(src)
+  */
+ #undef TRACE_INCLUDE_PATH
+ #undef TRACE_INCLUDE_FILE
+diff --git a/scripts/Makefile.asm-generic b/scripts/Makefile.asm-generic
+index 1d501c57f9ef..5d0e1a2da064 100644
+--- a/scripts/Makefile.asm-generic
++++ b/scripts/Makefile.asm-generic
+@@ -10,7 +10,7 @@ PHONY := all
+ all:
+ 
+ src := $(subst /generated,,$(obj))
+--include $(src)/Kbuild
++-include $(srctree)/$(src)/Kbuild
+ 
+ # $(generic)/Kbuild lists mandatory-y. Exclude um since it is a special case.
+ ifneq ($(SRCARCH),um)
+diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
+index d7d937903b13..4425dfadec76 100644
+--- a/scripts/Makefile.dtbinst
++++ b/scripts/Makefile.dtbinst
+@@ -17,7 +17,7 @@ export dtbinst_root ?= $(obj)
+ 
+ include include/config/auto.conf
+ include $(srctree)/scripts/Kbuild.include
+-include $(src)/Makefile
++include $(srctree)/$(src)/Makefile
+ 
+ dtbinst-files	:= $(sort $(dtb-y) $(if $(CONFIG_OF_ALL_DTBS), $(dtb-)))
+ dtboinst-files	:= $(dtbo-y)
+diff --git a/scripts/Makefile.headersinst b/scripts/Makefile.headersinst
+index 029d85bb0b23..ba83cd11f237 100644
+--- a/scripts/Makefile.headersinst
++++ b/scripts/Makefile.headersinst
+@@ -18,7 +18,7 @@ src := $(srctree)/$(obj)
+ gen := $(objtree)/$(subst include/,include/generated/,$(obj))
+ dst := usr/include
+ 
+--include $(src)/Kbuild
++-include $(srctree)/$(src)/Kbuild
+ 
+ # $(filter %/, ...) is a workaround for GNU Make <= 4.2.1, where
+ # $(wildcard $(src)/*/) contains not only directories but also regular files.
+diff --git a/sound/core/Makefile b/sound/core/Makefile
+index 2762f03d9b7b..f424248c26da 100644
+--- a/sound/core/Makefile
++++ b/sound/core/Makefile
+@@ -21,8 +21,8 @@ snd-pcm-$(CONFIG_SND_PCM_ELD) += pcm_drm_eld.o
+ snd-pcm-$(CONFIG_SND_PCM_IEC958) += pcm_iec958.o
+ 
+ # for trace-points
+-CFLAGS_pcm_lib.o := -I$(src)
+-CFLAGS_pcm_native.o := -I$(src)
++CFLAGS_pcm_lib.o := -I$(srctree)/$(src)
++CFLAGS_pcm_native.o := -I$(srctree)/$(src)
+ 
+ snd-pcm-dmaengine-objs := pcm_dmaengine.o
+ 
+diff --git a/sound/firewire/Makefile b/sound/firewire/Makefile
+index 44a7b510b75b..3230c0175fb3 100644
+--- a/sound/firewire/Makefile
++++ b/sound/firewire/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # To find a header included by define_trace.h.
+-CFLAGS_amdtp-stream.o	:= -I$(src)
++CFLAGS_amdtp-stream.o	:= -I$(srctree)/$(src)
+ 
+ snd-firewire-lib-objs := lib.o iso-resources.o packets-buffer.o \
+ 			 fcp.o cmp.o amdtp-stream.o amdtp-am824.o
+diff --git a/sound/firewire/motu/Makefile b/sound/firewire/motu/Makefile
+index 3bef2a0b1e2e..183998981817 100644
+--- a/sound/firewire/motu/Makefile
++++ b/sound/firewire/motu/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CFLAGS_amdtp-motu.o	:= -I$(src)
++CFLAGS_amdtp-motu.o	:= -I$(srctree)/$(src)
+ 
+ snd-firewire-motu-objs := motu.o amdtp-motu.o motu-transaction.o motu-stream.o \
+ 			  motu-proc.o motu-pcm.o motu-midi.o motu-hwdep.o \
+diff --git a/sound/hda/Makefile b/sound/hda/Makefile
+index 78f487a635f8..2dd516782501 100644
+--- a/sound/hda/Makefile
++++ b/sound/hda/Makefile
+@@ -3,7 +3,7 @@ snd-hda-core-objs := hda_bus_type.o hdac_bus.o hdac_device.o hdac_sysfs.o \
+ 	hdac_regmap.o hdac_controller.o hdac_stream.o array.o hdmi_chmap.o
+ 
+ snd-hda-core-objs += trace.o
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ # for sync with i915 gfx driver
+ snd-hda-core-$(CONFIG_SND_HDA_COMPONENT) += hdac_component.o
+diff --git a/sound/pci/hda/Makefile b/sound/pci/hda/Makefile
+index 00d306104484..0df4fb17c9ea 100644
+--- a/sound/pci/hda/Makefile
++++ b/sound/pci/hda/Makefile
+@@ -10,8 +10,8 @@ snd-hda-codec-$(CONFIG_SND_HDA_HWDEP) += hda_hwdep.o
+ snd-hda-codec-$(CONFIG_SND_HDA_INPUT_BEEP) += hda_beep.o
+ 
+ # for trace-points
+-CFLAGS_hda_controller.o := -I$(src)
+-CFLAGS_hda_intel.o := -I$(src)
++CFLAGS_hda_controller.o := -I$(srctree)/$(src)
++CFLAGS_hda_intel.o := -I$(srctree)/$(src)
+ 
+ snd-hda-codec-generic-objs :=	hda_generic.o
+ snd-hda-codec-realtek-objs :=	patch_realtek.o
+diff --git a/sound/soc/intel/avs/Makefile b/sound/soc/intel/avs/Makefile
+index 919212825f21..02f7e708513d 100644
+--- a/sound/soc/intel/avs/Makefile
++++ b/sound/soc/intel/avs/Makefile
+@@ -7,7 +7,7 @@ snd-soc-avs-objs += skl.o apl.o
+ 
+ snd-soc-avs-objs += trace.o
+ # tell define_trace.h where to find the trace header
+-CFLAGS_trace.o := -I$(src)
++CFLAGS_trace.o := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_SND_SOC_INTEL_AVS) += snd-soc-avs.o
+ 
+diff --git a/sound/soc/intel/catpt/Makefile b/sound/soc/intel/catpt/Makefile
+index c393a45795da..9510f0c68505 100644
+--- a/sound/soc/intel/catpt/Makefile
++++ b/sound/soc/intel/catpt/Makefile
+@@ -1,6 +1,6 @@
+ snd-soc-catpt-objs := device.o dsp.o loader.o ipc.o messages.o pcm.o sysfs.o
+ 
+ # tell define_trace.h where to find the trace header
+-CFLAGS_device.o := -I$(src)
++CFLAGS_device.o := -I$(srctree)/$(src)
+ 
+ obj-$(CONFIG_SND_SOC_INTEL_CATPT) += snd-soc-catpt.o
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/Makefile b/tools/testing/selftests/bpf/bpf_testmod/Makefile
+index 15cb36c4483a..20e9067aca55 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/Makefile
++++ b/tools/testing/selftests/bpf/bpf_testmod/Makefile
+@@ -10,7 +10,7 @@ endif
+ MODULES = bpf_testmod.ko
+ 
+ obj-m += bpf_testmod.o
+-CFLAGS_bpf_testmod.o = -I$(src)
++CFLAGS_bpf_testmod.o = -I$(srctree)/$(src)
+ 
+ all:
+ 	+$(Q)make -C $(KDIR) M=$(BPF_TESTMOD_DIR) modules
+-- 
+2.41.0
+
