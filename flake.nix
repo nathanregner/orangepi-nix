@@ -16,6 +16,10 @@
       url = "github:orangepi-xunlong/linux-orangepi?ref=orange-pi-6.1-sun50iw9";
       flake = false;
     };
+    u-boot-orangepi-v2021_10-sunxi = {
+      url = "github:orangepi-xunlong/u-boot-orangepi?ref=v2021.10-sunxi";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ flakelight, ... }:
