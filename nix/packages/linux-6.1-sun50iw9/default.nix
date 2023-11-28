@@ -12,7 +12,7 @@ in with lib;
   src = inputs.linux-orangepi-sun50iw9;
 
   allowImportFromDerivation = true;
-  configfile = ./linux-6.1-sun50iw9-next.config;
+  configfile = ./.config;
 
   kernelPatches = [{
     name = "nix-patches";
