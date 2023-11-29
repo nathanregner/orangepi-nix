@@ -40,5 +40,16 @@ in with lib;
 
   # remove CC=stdenv.cc
   makeFlags = filter (flag: !(strings.hasPrefix "CC=" flag)) prev.makeFlags;
+
+  passthru.defconfig = import ./defconfig.nix {
+    inherit lib pkgsBuildBuild linuxManualConfig;
+    args = {
+      version = "6.1.31";
+      src = inputs.linux-orangepi-sun50iw9;
+      configfile = ./.config;
+      extraMakeFlags =
+        [ "WERROR=0" "LLVM=1" "CROSS_COMPILE=arm64-linux-gnueabi-" ];
+    };
+  };
 })
 
