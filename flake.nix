@@ -3,7 +3,11 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
-    flakelight.url = "github:accelbread/flakelight";
+    flakelight = {
+      url = "github:accelbread/flakelight";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     armbian-build = {
       url = "github:armbian/build";
       flake = false;

@@ -18,7 +18,9 @@
     },
     "flakelight": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1700715301,
@@ -53,21 +55,6 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1692447944,
-        "narHash": "sha256-fkJGNjEmTPvqBs215EQU4r9ivecV5Qge5cF/QDLVn3U=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "d680ded26da5cf104dd2735a51e88d2d8f487b4d",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-unstable",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
         "lastModified": 1701040486,
         "narHash": "sha256-vawYwoHA5CwvjfqaT3A5CT9V36Eq43gxdwpux32Qkjw=",
         "owner": "NixOS",
@@ -84,11 +71,11 @@
     "orangepi-firmware": {
       "flake": false,
       "locked": {
-        "lastModified": 1693213694,
-        "narHash": "sha256-cLSkfm25st6lyV/PJtUMM+Wu2r0IfLmVDGAYzafcC2Q=",
+        "lastModified": 1652750358,
+        "narHash": "sha256-D7CpSAeRTV4cK0LfEecRJQ8RzyRTSvUImj2ELSr1GS0=",
         "owner": "orangepi-xunlong",
         "repo": "firmware",
-        "rev": "b2809d6c7a79ab874a91b84b9b0d9169cb41a749",
+        "rev": "10ce842f7f0bf52e3a0b57cdab91a7534f3c242a",
         "type": "github"
       },
       "original": {
@@ -102,7 +89,7 @@
         "armbian-build": "armbian-build",
         "flakelight": "flakelight",
         "linux-orangepi-sun50iw9": "linux-orangepi-sun50iw9",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs",
         "orangepi-firmware": "orangepi-firmware",
         "u-boot-orangepi-v2021_10-sunxi": "u-boot-orangepi-v2021_10-sunxi"
       }
