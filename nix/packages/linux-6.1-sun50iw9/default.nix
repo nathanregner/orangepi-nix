@@ -1,4 +1,4 @@
-{ inputs, lib, pkgsBuildBuild, linuxManualConfig, ... }@args:
+{ inputs, lib, pkgsBuildBuild, linuxManualConfig, callPackage, ... }@args:
 let inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang stdenv;
 in with lib;
 ((linuxManualConfig rec {
@@ -38,18 +38,25 @@ in with lib;
     makeFlagsArray+=(KCFLAGS="-I${clang}/resource-root/include -Wno-everything -march=armv8-a+crypto")
   '';
 
-  # remove CC=stdenv.cc
-  makeFlags = filter (flag: !(strings.hasPrefix "CC=" flag)) prev.makeFlags;
-
-  passthru.defconfig = import ./defconfig.nix {
-    inherit lib pkgsBuildBuild linuxManualConfig;
-    args = {
-      version = "6.1.31";
-      src = inputs.linux-orangepi-sun50iw9;
-      configfile = ./.config;
-      extraMakeFlags =
-        [ "WERROR=0" "LLVM=1" "CROSS_COMPILE=arm64-linux-gnueabi-" ];
+  passthru.defconfig = ((linuxManualConfig rec {
+    version = "6.1.31";
+    modDirVersion = version;
+    extraMeta = {
+      branch = versions.majorMinor version;
+      platforms = [ "aarch64-linux" ];
     };
-  };
+    src = inputs.linux-orangepi-sun50iw9;
+    configfile = ./.config;
+    allowImportFromDerivation = false;
+    extraMakeFlags =
+      [ "WERROR=0" "LLVM=1" "CROSS_COMPILE=arm64-linux-gnueabi-" ];
+  }).override { inherit stdenv; }).overrideAttrs (final: prev: {
+    buildFlags = [ "savedefconfig" ];
+    installPhase = "cp ./defconfig $out";
+
+    nativeBuildInputs = prev.nativeBuildInputs ++ [ bintools-unwrapped clang ];
+    # remove CC=stdenv.cc
+    makeFlags = filter (flag: !(strings.hasPrefix "CC=" flag)) prev.makeFlags;
+  });
 })
 
