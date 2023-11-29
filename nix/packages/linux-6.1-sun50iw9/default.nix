@@ -41,7 +41,8 @@ let
   # derive a defconfig from the one provided by orangepi-build
   # this lets us utilize extraStructuredConfig
   defconfig = (applyOverrides (linuxManualConfig (common // {
-    configfile = ./linux-6.1-sun50iw9-next.config;
+    configfile =
+      "${inputs.orangepi-build}/external/config/kernel/linux-6.1-sun50iw9-next.config";
     allowImportFromDerivation = false;
   }))).overrideAttrs (_: _: {
     name = "orangepi_zero2_defconfig";
@@ -61,12 +62,11 @@ let
   '';
 
 in (applyOverrides (buildLinux (args // common // {
-
   defconfig = defconfig.name;
+  autoModules = false;
   structuredExtraConfig = with lib.kernel;
     {
       RTL8723DU = no;
-      # SCHED_MUQSS = yes;
     } // listToAttrs (map (attr: {
       name = attr;
       value = yes;

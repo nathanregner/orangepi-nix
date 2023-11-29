@@ -12,6 +12,10 @@
       url = "github:armbian/build";
       flake = false;
     };
+    orangepi-build = {
+      url = "github:orangepi-xunlong/orangepi-build";
+      flake = false;
+    };
     orangepi-firmware = {
       url = "github:orangepi-xunlong/firmware";
       flake = false;
