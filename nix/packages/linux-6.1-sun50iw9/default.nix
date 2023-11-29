@@ -25,6 +25,8 @@ let
 
   applyOverrides = (drv:
     (drv.override { inherit stdenv; }).overrideAttrs (final: prev: {
+      passthru = prev.passthru // { inherit (drv.passthru) features; };
+
       preBuild = ''
         makeFlagsArray+=(KCFLAGS="-I${clang}/resource-root/include -Wno-everything -march=armv8-a+crypto")
       '';
