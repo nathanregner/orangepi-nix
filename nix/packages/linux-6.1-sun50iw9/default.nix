@@ -16,7 +16,7 @@ let
     extraMakeFlags = [
       "WERROR=0"
       "LLVM=1"
-      "CROSS_COMPILE=arm64-linux-gnueabi-"
+      "CROSS_COMPILE=aarch64-none-linux-gnu-"
       # nativeBuildInputs doesn't get passed to the configfile derivation,
       # so set this manually...
       "LD=${bintools-unwrapped}/bin/ld.lld"
