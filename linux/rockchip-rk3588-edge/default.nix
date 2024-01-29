@@ -30,7 +30,8 @@ in with lib;
 
   # make LSMOD=/tmp/mylsmod LMC_KEEP="drivers/usb:drivers/gpu:fs" localmodconfig
   configfile = let
-    base =  "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
+    base =
+      "${inputs.armbian-build}/config/kernel/linux-rockchip-rk3588-edge.config";
     # base =  ./.config;
     options = [
       # enable modules required by systemd.nix

@@ -36,6 +36,23 @@
         "type": "github"
       }
     },
+    "linux-orangepi-orange-pi-6-6-rk35xx": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1708140437,
+        "narHash": "sha256-jEcdaX/KzTqC3nIBhIIv+lfOxj8FiA3aDGhPtMBPlbk=",
+        "owner": "nathanregner",
+        "repo": "linux",
+        "rev": "5d758b405dc7c2f7cfd9cc052685f96ae11190d3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nathanregner",
+        "ref": "v6.6-rk3588",
+        "repo": "linux",
+        "type": "github"
+      }
+    },
     "linux-orangepi-sun50iw9": {
       "flake": false,
       "locked": {
@@ -55,17 +72,18 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1703499205,
-        "narHash": "sha256-lF9rK5mSUfIZJgZxC3ge40tp1gmyyOXZ+lRY3P8bfbg=",
-        "owner": "NixOS",
+        "lastModified": 1706098335,
+        "narHash": "sha256-r3dWjT8P9/Ah5m5ul4WqIWD8muj5F+/gbCdjiNVBKmU=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e1fa12d4f6c6fe19ccb59cac54b5b3f25e160870",
+        "rev": "a77ab169a83a4175169d78684ddd2e54486ac651",
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "ref": "nixpkgs-unstable",
-        "type": "indirect"
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "orangepi-build": {
@@ -104,6 +122,7 @@
       "inputs": {
         "armbian-build": "armbian-build",
         "flakelight": "flakelight",
+        "linux-orangepi-orange-pi-6-6-rk35xx": "linux-orangepi-orange-pi-6-6-rk35xx",
         "linux-orangepi-sun50iw9": "linux-orangepi-sun50iw9",
         "nixpkgs": "nixpkgs",
         "orangepi-build": "orangepi-build",

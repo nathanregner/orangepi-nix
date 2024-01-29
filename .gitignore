@@ -2,6 +2,7 @@
 result
 result-*
 .direnv/
+source
 
 ### Editors
 .idea/*
