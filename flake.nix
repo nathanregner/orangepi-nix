@@ -24,6 +24,10 @@
       url = "github:orangepi-xunlong/linux-orangepi?ref=orange-pi-6.1-sun50iw9";
       flake = false;
     };
+    linux-orangepi-orange-pi-6-6-rk35xx = {
+      url = "github:orangepi-xunlong/linux-orangepi?ref=orange-pi-6.6-rk35xx";
+      flake = false;
+    };
     u-boot-orangepi-v2021_10-sunxi = {
       url = "github:orangepi-xunlong/u-boot-orangepi?ref=v2021.10-sunxi";
       flake = false;
@@ -34,5 +38,16 @@
     flakelight ./. {
       inherit inputs;
       systems = [ "aarch64-linux" ];
+    } // {
+      packages.x86_64-linux.pkgsCross = let
+        pkgs = import inputs.nixpkgs {
+          localSystem = "x86_64-linux";
+          crossSystem = "aarch64-linux";
+        };
+      in {
+        linux = pkgs.callPackage ./nix/packages/linux-6_1-sun50iw9.nix {
+          inherit inputs;
+        };
+      };
     };
 }

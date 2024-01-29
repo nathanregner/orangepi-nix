@@ -1,21 +1,22 @@
-{ inputs, lib, pkgsBuildBuild, buildLinux, linuxManualConfig, runCommand, git
-, ... }@args:
+{ inputs, lib, pkgsBuildBuild, pkgsBuildTarget, runCommand, git, ... }@args:
 with lib;
 let
+  inherit (pkgsBuildTarget) buildLinux linuxManualConfig;
   inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang stdenv;
 
   common = rec {
-    version = "6.1.31";
+    version = "6.6.0-rc5";
     modDirVersion = version;
     extraMeta = {
       branch = versions.majorMinor version;
-      platforms = [ "aarch64-linux" ];
+      # platforms = [ "aarch64-linux" ];
     };
-    src = inputs.linux-orangepi-sun50iw9;
+    src = inputs.linux-orangepi-orange-pi-6-6-rk35xx;
     # use clang for simpler cross-compilation
     extraMakeFlags = [
       "WERROR=0"
       "LLVM=1"
+      "ARCH=arm64"
       "CROSS_COMPILE=aarch64-none-linux-gnu-"
       # nativeBuildInputs doesn't get passed to the configfile derivation,
       # so set this manually...
@@ -28,7 +29,8 @@ let
       passthru = drv.passthru;
 
       preBuild = ''
-        makeFlagsArray+=(KCFLAGS="-I${clang}/resource-root/include -Wno-everything -march=armv8-a+crypto")
+        makeFlagsArray+=(KCFLAGS="-I${clang}/resource-root/include -Wno-everything -march=armv8-a+crypto -Wno-error=unused-command-line-argument")
+        makeFlagsArray+=(CFLAGS="-I${clang}/resource-root/include -Wno-everything -Wno-error=unused-command-line-argument")
       '';
 
       nativeBuildInputs = prev.nativeBuildInputs
@@ -44,6 +46,10 @@ let
     configfile =
       "${inputs.orangepi-build}/external/config/kernel/linux-6.1-sun50iw9-next.config";
     allowImportFromDerivation = false;
+    kernelPatches = [{
+      name = "nix-patches";
+      patch = [ ./patches/0001-Remove-fno-strict-overflow-flag.patch ];
+    }];
   }))).overrideAttrs (_: _: {
     name = "orangepi_zero2_defconfig";
     buildFlags = [ "savedefconfig" ];
@@ -107,6 +113,10 @@ in (applyOverrides (buildLinux (args // common // {
       patch = defconfigPatch;
     }
   ];
+
+  postPatch = ''
+    substituteInPlace drivers/net/wireless/uwe5622/**/Makefile --replace "/lib/firmware" "/run/current-system/firmware"
+  '';
 } // (args.argsOverride or { })))).overrideAttrs (final: prev: {
   name = "k"; # stay under u-boot path length limit
   passthru = prev.passthru // {

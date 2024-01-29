@@ -1,0 +1,40 @@
+From c6621e89fb1ff00688c5bcfe5be820dc06cab532 Mon Sep 17 00:00:00 2001
+From: Nathan Regner <nathanregner@gmail.com>
+Date: Sun, 28 Jan 2024 14:52:59 -0700
+Subject: [PATCH 1/2] Remove -fno-strict-overflow flag
+
+Signed-off-by: Nathan Regner <nathanregner@gmail.com>
+---
+ Makefile                          | 3 ---
+ arch/arm64/kernel/vdso32/Makefile | 1 -
+ 2 files changed, 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 88ebf65479644..d43a876863553 100644
+--- a/Makefile
++++ b/Makefile
+@@ -994,9 +994,6 @@ NOSTDINC_FLAGS += -nostdinc
+ # perform bounds checking.
+ KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
+ 
+-# disable invalid "can't wrap" optimizations for signed / pointers
+-KBUILD_CFLAGS	+= -fno-strict-overflow
+-
+ # Make sure -fstack-check isn't enabled (like gentoo apparently did)
+ KBUILD_CFLAGS  += -fno-stack-check
+ 
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 2f73e5bca213f..2db3f1d062553 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -69,7 +69,6 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+ VDSO_CFLAGS  += -O2
+ # Some useful compiler-dependent flags from top-level Makefile
+ VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
+-VDSO_CFLAGS += -fno-strict-overflow
+ VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
+ VDSO_CFLAGS += -Werror=date-time
+ VDSO_CFLAGS += $(call cc32-option,-Werror=incompatible-pointer-types)
+-- 
+2.42.0
+
