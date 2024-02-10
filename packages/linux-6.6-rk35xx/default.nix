@@ -60,7 +60,7 @@ let
   #   dontFixup = true;
   # });
   defconfig = runCommand "orangepi_zero2_defconfig" { } ''
-    cp ${../../../defconfig} $out
+    cp ${./defconfig} $out
   '';
   defconfigPatch = let dir = "arch/arm64/configs";
   in runCommand "defconfig-patch" { nativeBuildInputs = [ git ]; } ''

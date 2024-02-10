@@ -38,15 +38,18 @@
     flakelight ./. {
       inherit inputs;
       systems = [ "aarch64-linux" ];
-    } // {
-      packages.x86_64-linux.pkgsCross = let
-        pkgs = import inputs.nixpkgs {
-          localSystem = "x86_64-linux";
-          crossSystem = "aarch64-linux";
+      outputs = let
+        mkPkgs = pkgs: {
+          linux-6_6-rk35xx =
+            pkgs.callPackage ./packages/linux-6.6-rk35xx { inherit inputs; };
         };
       in {
-        linux = pkgs.callPackage ./nix/packages/linux-6_1-sun50iw9.nix {
-          inherit inputs;
+        packages = {
+          aarch64-linux = mkPkgs inputs.nixpkgs.legacyPackages.aarch64-linux;
+          x86_64-linux.pkgsCross = mkPkgs (import inputs.nixpkgs {
+            localSystem = "x86_64-linux";
+            crossSystem = "aarch64-linux";
+          });
         };
       };
     };
