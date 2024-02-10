@@ -1,8 +1,9 @@
-{ inputs, lib, pkgsBuildBuild, pkgsBuildTarget, runCommand, git, ... }@args:
+{ inputs, lib, pkgsBuildBuild, pkgsBuildTarget, runCommand, git, stdenv, ...
+}@args:
 with lib;
 let
-  inherit (pkgsBuildTarget) buildLinux linuxManualConfig;
-  inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang stdenv;
+  inherit (pkgsBuildTarget) buildLinux;
+  inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang;
 
   common = rec {
     version = "6.6.0-rc5";
@@ -42,22 +43,25 @@ let
 
   # derive a defconfig from the one provided by orangepi-build
   # this lets us utilize extraStructuredConfig
-  defconfig = args.defconfig or (applyOverrides (linuxManualConfig (common // {
-    configfile =
-      "${inputs.orangepi-build}/external/config/kernel/linux-6.1-sun50iw9-next.config";
-    allowImportFromDerivation = false;
-    kernelPatches = [{
-      name = "nix-patches";
-      patch = [ ./patches/0001-Remove-fno-strict-overflow-flag.patch ];
-    }];
-  }))).overrideAttrs (_: _: {
-    name = "orangepi_zero2_defconfig";
-    buildFlags = [ "savedefconfig" ];
-    installPhase = "cp ./defconfig $out";
-    preInstall = "";
-    postInstall = "";
-    dontFixup = true;
-  });
+  # defconfig =  (applyOverrides (linuxManualConfig (common // {
+  #   configfile =
+  #     "${inputs.orangepi-build}/external/config/kernel/linux-6.1-sun50iw9-next.config";
+  #   allowImportFromDerivation = false;
+  #   kernelPatches = [{
+  #     name = "nix-patches";
+  #     patch = [ ./patches/0001-Remove-fno-strict-overflow-flag.patch ];
+  #   }];
+  # }))).overrideAttrs (_: _: {
+  #   name = "orangepi_zero2_defconfig";
+  #   buildFlags = [ "savedefconfig" ];
+  #   installPhase = "cp ./defconfig $out";
+  #   preInstall = "";
+  #   postInstall = "";
+  #   dontFixup = true;
+  # });
+  defconfig = runCommand "orangepi_zero2_defconfig" { } ''
+    cp ${../../../defconfig} $out
+  '';
   defconfigPatch = let dir = "arch/arm64/configs";
   in runCommand "defconfig-patch" { nativeBuildInputs = [ git ]; } ''
     mkdir -p ${dir}
@@ -121,6 +125,7 @@ in (applyOverrides (buildLinux (args // common // {
   name = "k"; # stay under u-boot path length limit
   passthru = prev.passthru // {
     inherit defconfig defconfigPatch bintools-unwrapped;
+    kernelArch = stdenv.hostPlatform.linuxArch;
   };
 })
 

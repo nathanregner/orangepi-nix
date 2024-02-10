@@ -1,0 +1,25 @@
+From e2383d146c52a1c7913af4439e6ce43f1740447d Mon Sep 17 00:00:00 2001
+From: Nathan Regner <nathanregner@gmail.com>
+Date: Sat, 10 Feb 2024 14:44:50 -0700
+Subject: [PATCH] Add EXPORT_SYMBOL_GPL(sched_setscheduler) to fix uwe2622
+ compile error
+
+---
+ kernel/sched/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 802551e000..d947989a7f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7883,6 +7883,7 @@ int sched_setscheduler(struct task_struct *p, int policy,
+ {
+ 	return _sched_setscheduler(p, policy, param, true);
+ }
++EXPORT_SYMBOL_GPL(sched_setscheduler);
+
+ int sched_setattr(struct task_struct *p, const struct sched_attr *attr)
+ {
+--
+2.43.0
+
