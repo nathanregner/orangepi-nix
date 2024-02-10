@@ -16,13 +16,13 @@ index 88ebf65479644..d43a876863553 100644
 @@ -994,9 +994,6 @@ NOSTDINC_FLAGS += -nostdinc
  # perform bounds checking.
  KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
- 
+
 -# disable invalid "can't wrap" optimizations for signed / pointers
 -KBUILD_CFLAGS	+= -fno-strict-overflow
 -
  # Make sure -fstack-check isn't enabled (like gentoo apparently did)
  KBUILD_CFLAGS  += -fno-stack-check
- 
+
 diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
 index 2f73e5bca213f..2db3f1d062553 100644
 --- a/arch/arm64/kernel/vdso32/Makefile
@@ -35,6 +35,6 @@ index 2f73e5bca213f..2db3f1d062553 100644
  VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
  VDSO_CFLAGS += -Werror=date-time
  VDSO_CFLAGS += $(call cc32-option,-Werror=incompatible-pointer-types)
--- 
+--
 2.42.0
 

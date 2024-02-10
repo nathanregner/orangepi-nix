@@ -7,7 +7,7 @@
   nixpkgs.hostPlatform = "aarch64-linux";
 
   boot = {
-    kernelPackages = pkgs.linuxPackagesFor pkgs.linux-6_1-sun50iw9;
+    kernelPackages = pkgs.linuxPackagesFor pkgs.linux-6_6-rk35xx;
     kernelParams = [ "boot.shell_on_fail" ];
     kernelModules = [
       "sprdwl_ng" # wifi driver
