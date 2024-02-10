@@ -42,7 +42,7 @@ let
 
   # derive a defconfig from the one provided by orangepi-build
   # this lets us utilize extraStructuredConfig
-  defconfig = (applyOverrides (linuxManualConfig (common // {
+  defconfig = args.defconfig or (applyOverrides (linuxManualConfig (common // {
     configfile =
       "${inputs.orangepi-build}/external/config/kernel/linux-6.1-sun50iw9-next.config";
     allowImportFromDerivation = false;
