@@ -1,1 +1,1 @@
-import ../packages/linux-6_6-rk35xx.nix
+import ../../packages/linux-6.6-rk35xx

@@ -45,7 +45,7 @@
         };
       in {
         packages = {
-          aarch64-linux = mkPkgs inputs.nixpkgs.legacyPackages.aarch64-linux;
+          # aarch64-linux = mkPkgs inputs.nixpkgs.legacyPackages.aarch64-linux;
           x86_64-linux.pkgsCross = mkPkgs (import inputs.nixpkgs {
             localSystem = "x86_64-linux";
             crossSystem = "aarch64-linux";
