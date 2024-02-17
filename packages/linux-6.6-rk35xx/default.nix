@@ -7,7 +7,7 @@ let
   inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang;
 
   common = rec {
-    version = "6.6.0-rc5";
+    version = "6.6.16";
     modDirVersion = version;
     extraMeta = {
       branch = versions.majorMinor version;
@@ -48,10 +48,6 @@ let
     configfile =
       "${inputs.orangepi-build}/external/config/kernel/linux-6.1-sun50iw9-next.config";
     allowImportFromDerivation = false;
-    kernelPatches = [{
-      name = "nix-patches";
-      patch = [ ./patches/0001-Remove-fno-strict-overflow-flag.patch ];
-    }];
   }))).overrideAttrs (final: prev: {
     name = "orangepi_zero2_defconfig";
     buildFlags = [ "savedefconfig" ];
@@ -65,17 +61,6 @@ let
   kernel = ((applyOverrides (linuxManualConfig (common // {
     configfile = ./config;
     allowImportFromDerivation = true;
-
-    kernelPatches = [{
-      name = "nix-patches";
-      patch = let
-        patchesPath = ./patches;
-        isPatchFile = name: value:
-          value == "regular" && (lib.hasSuffix ".patch" name);
-        patchFilePath = name: patchesPath + "/${name}";
-      in map patchFilePath (lib.naturalSort (lib.attrNames
-        (lib.filterAttrs isPatchFile (builtins.readDir patchesPath))));
-    }];
 
   } // (args.argsOverride or { })))).overrideAttrs (final: prev: {
     name = "k"; # stay under u-boot path length limit
