@@ -105,11 +105,11 @@
     "orangepi-firmware": {
       "flake": false,
       "locked": {
-        "lastModified": 1693213694,
-        "narHash": "sha256-cLSkfm25st6lyV/PJtUMM+Wu2r0IfLmVDGAYzafcC2Q=",
+        "lastModified": 1706114690,
+        "narHash": "sha256-mltaup92LTGbuCXeGTMdoFloX3vZRbaUFVbh6lwveFs=",
         "owner": "orangepi-xunlong",
         "repo": "firmware",
-        "rev": "b2809d6c7a79ab874a91b84b9b0d9169cb41a749",
+        "rev": "76ead17a1770459560042a9a7c43fe615bbce5e7",
         "type": "github"
       },
       "original": {
