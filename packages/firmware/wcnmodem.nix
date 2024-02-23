@@ -12,5 +12,5 @@ in runCommand "wcnmodem-firmware" {
   passthru = { compressFirmware = false; };
 } ''
   mkdir -p $out/lib/firmware
-  cp -r ${src}/uwe5622 $out/lib/firmware/
+  cp -r ${src}/uwe5622/* $out/lib/firmware/
 ''
