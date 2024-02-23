@@ -17,8 +17,8 @@ let
       owner = "nathanregner";
       repo = "linux";
       rev =
-        "47a05f71581533774446a38a0a82e969cee64f5b"; # orangepi-zero2/armbian-6.6.y
-      sha256 = "sha256-jqeJsB+gAUSRJdKOLjkSZOdJNvInRb4hxdWeVKYtgOs=";
+        "8ef28fbce30298efc883e0694ae3d450074aaeea"; # orangepi-zero2/armbian-6.6.y
+      sha256 = "sha256-pI4nLCfIqZvd7iImcCbpHPS3CbdQj6W4RleBnLOHo9k=";
     };
     # use clang for simpler cross-compilation
     extraMakeFlags = [
