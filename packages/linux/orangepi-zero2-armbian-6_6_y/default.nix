@@ -1,5 +1,5 @@
-{ inputs, lib, pkgsBuildBuild, pkgsBuildTarget, runCommand, git, stdenv, ...
-}@args:
+{ lib, pkgsBuildBuild, pkgsBuildTarget, runCommand, git, stdenv, fetchFromGitHub
+, ... }@args:
 with lib;
 let
   inherit (pkgsBuildBuild) pkg-config ncurses qt5;
@@ -13,7 +13,13 @@ let
       branch = versions.majorMinor version;
       # platforms = [ "aarch64-linux" ];
     };
-    src = inputs.linux-orangepi-zero2-armbian-6_6_y;
+    src = fetchFromGitHub {
+      owner = "nathanregner";
+      repo = "linux";
+      rev =
+        "70d1b98515f7e7898534e64f7784a9ec20388e5f"; # orangepi-zero2/armbian-6.6.y
+      sha256 = "sha256-jqeJsB+gAUSRJdKOLjkSZOdJNvInRb4hxdWeVKYtgOs=";
+    };
     # use clang for simpler cross-compilation
     extraMakeFlags = [
       "WERROR=0"
@@ -35,14 +41,19 @@ let
         makeFlagsArray+=(CFLAGS="-I${clang}/resource-root/include -Wno-everything -Wno-error=unused-command-line-argument")
       '';
 
-      nativeBuildInputs = prev.nativeBuildInputs
-        ++ [ bintools-unwrapped clang pkg-config ncurses qt5.qtbase ];
+      nativeBuildInputs = prev.nativeBuildInputs ++ [
+        bintools-unwrapped
+        clang
+        pkg-config
+        ncurses
+        # qt5.qtbase
+      ];
 
-      PKG_CONFIG_PATH =
-        "${ncurses.dev}/lib/pkgconfig:${qt5.qtbase.dev}/lib/pkgconfig";
-      QT_QPA_PLATFORM_PLUGIN_PATH =
-        "${qt5.qtbase.bin}/lib/qt-${qt5.qtbase.version}/plugins";
-      QT_QPA_PLATFORMTHEME = "qt5ct";
+      # PKG_CONFIG_PATH =
+      #   "${ncurses.dev}/lib/pkgconfig:${qt5.qtbase.dev}/lib/pkgconfig";
+      # QT_QPA_PLATFORM_PLUGIN_PATH =
+      #   "${qt5.qtbase.bin}/lib/qt-${qt5.qtbase.version}/plugins";
+      # QT_QPA_PLATFORMTHEME = "qt5ct";
 
       # remove CC=stdenv.cc
       makeFlags = filter (flag: !(strings.hasPrefix "CC=" flag)) prev.makeFlags;
