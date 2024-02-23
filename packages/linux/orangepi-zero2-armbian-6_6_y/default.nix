@@ -17,7 +17,7 @@ let
       owner = "nathanregner";
       repo = "linux";
       rev =
-        "70d1b98515f7e7898534e64f7784a9ec20388e5f"; # orangepi-zero2/armbian-6.6.y
+        "47a05f71581533774446a38a0a82e969cee64f5b"; # orangepi-zero2/armbian-6.6.y
       sha256 = "sha256-jqeJsB+gAUSRJdKOLjkSZOdJNvInRb4hxdWeVKYtgOs=";
     };
     # use clang for simpler cross-compilation
@@ -87,7 +87,7 @@ let
     };
     postPatch = ''
       ${prev.postPatch or ""}
-      substituteInPlace drivers/net/wireless/uwe5622/**/Makefile --replace "/lib/firmware" "/run/current-system/firmware"
+      substituteInPlace drivers/net/wireless/uwe5622/Makefile --replace "/lib/firmware" "/run/current-system/firmware"
     '';
 
     linkConfig = "ln -srf ${final.passthru.configfile} .config";

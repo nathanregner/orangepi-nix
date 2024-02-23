@@ -1,38 +1,5 @@
 {
   "nodes": {
-    "armbian-firmware": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1704110280,
-        "narHash": "sha256-mDfviA0aMCDesStRq0ei9oNtVCrisaIgTP3W2oMDxfI=",
-        "owner": "armbian",
-        "repo": "firmware",
-        "rev": "6b6f053f6089e08dd2a675cda1ec813de2e842e2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "armbian",
-        "repo": "firmware",
-        "type": "github"
-      }
-    },
-    "linux-orangepi-zero2-armbian-6_6_17": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1708380261,
-        "narHash": "sha256-jqeJsB+gAUSRJdKOLjkSZOdJNvInRb4hxdWeVKYtgOs=",
-        "owner": "nathanregner",
-        "repo": "linux",
-        "rev": "70d1b98515f7e7898534e64f7784a9ec20388e5f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nathanregner",
-        "ref": "orangepi-zero2/armbian-6.6.17",
-        "repo": "linux",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1706098335,
@@ -51,8 +18,6 @@
     },
     "root": {
       "inputs": {
-        "armbian-firmware": "armbian-firmware",
-        "linux-orangepi-zero2-armbian-6_6_17": "linux-orangepi-zero2-armbian-6_6_17",
         "nixpkgs": "nixpkgs"
       }
     }
