@@ -85,11 +85,7 @@ let
       inherit defconfig defconfigPatch bintools-unwrapped;
       kernelArch = stdenv.hostPlatform.linuxArch;
     };
-    postPatch = ''
-      ${prev.postPatch or ""}
-      substituteInPlace drivers/net/wireless/uwe5622/Makefile --replace "/lib/firmware" "/run/current-system/firmware"
-    '';
-
+    # SHELL=bash nix develop ... $linkConfig
     linkConfig = "ln -srf ${final.passthru.configfile} .config";
   }));
 
