@@ -2,18 +2,18 @@
 }@args:
 with lib;
 let
-  inherit (pkgsBuildBuild) pkg-config ncurses;
+  inherit (pkgsBuildBuild) pkg-config ncurses qt5;
   inherit (pkgsBuildTarget) linuxManualConfig;
   inherit (pkgsBuildBuild.llvmPackages) bintools-unwrapped clang;
 
   common = rec {
-    version = "6.6.16";
+    version = "6.6.17";
     modDirVersion = version;
     extraMeta = {
       branch = versions.majorMinor version;
       # platforms = [ "aarch64-linux" ];
     };
-    src = inputs.linux-orangepi-orange-pi-6-6-rk35xx;
+    src = inputs.linux-orangepi-zero2-armbian-6_6_y;
     # use clang for simpler cross-compilation
     extraMakeFlags = [
       "WERROR=0"
@@ -36,7 +36,13 @@ let
       '';
 
       nativeBuildInputs = prev.nativeBuildInputs
-        ++ [ bintools-unwrapped clang pkg-config ncurses ];
+        ++ [ bintools-unwrapped clang pkg-config ncurses qt5.qtbase ];
+
+      PKG_CONFIG_PATH =
+        "${ncurses.dev}/lib/pkgconfig:${qt5.qtbase.dev}/lib/pkgconfig";
+      QT_QPA_PLATFORM_PLUGIN_PATH =
+        "${qt5.qtbase.bin}/lib/qt-${qt5.qtbase.version}/plugins";
+      QT_QPA_PLATFORMTHEME = "qt5ct";
 
       # remove CC=stdenv.cc
       makeFlags = filter (flag: !(strings.hasPrefix "CC=" flag)) prev.makeFlags;
