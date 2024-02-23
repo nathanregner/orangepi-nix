@@ -1,13 +1,15 @@
 { modulesPath, config, pkgs, lib, ... }: {
+  imports = [
+    "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
+    "${modulesPath}/profiles/minimal.nix"
+  ];
+
   options.hardware.orangepi-zero2 = {
     pkgs = lib.mkOption { type = lib.types.attrs; };
   };
+
   config = let cfg = config.hardware.orangepi-zero2;
   in {
-    imports = [
-      "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
-      "${modulesPath}/profiles/minimal.nix"
-    ];
 
     nixpkgs.hostPlatform = "aarch64-linux";
 

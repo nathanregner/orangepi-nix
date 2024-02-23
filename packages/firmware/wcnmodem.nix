@@ -11,6 +11,6 @@ in runCommand "wcnmodem-firmware" {
   # WIFI drivers are jank and have their own loading mechanism that doesn't support compression...
   passthru = { compressFirmware = false; };
 } ''
-  mkdir -p $out/lib/
-  cp -r ${src}/uwe5622 $out/lib/firmware
+  mkdir -p $out/lib/firmware
+  cp -r ${src}/uwe5622 $out/lib/firmware/
 ''
